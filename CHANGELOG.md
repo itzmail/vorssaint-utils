@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- AI usage in the Dynamic Island follows Command Code and Antigravity plan limits too: Command Code's 5-hour, weekly and credit limits, and Antigravity's model quotas through its `agy` command line tool. Each can be turned off in the island's AI settings.
 - Prayer times for Indonesia (all 517 Kemenag locations) and Makkah, Madinah and Jeddah, worked out on your Mac. A notice in the Dynamic Island names each prayer, with the adzan or a short tone, and a countdown shows before it. Follow your location to pick the nearest city, or choose one by hand. It is off by default; turn it on from Features. The adzan recording is by 3omar Faruq (CC BY 3.0).
 
 ## [3.4.4] - 2026-11-11
