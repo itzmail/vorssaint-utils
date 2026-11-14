@@ -302,6 +302,8 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Prayer/PrayerPlaces.swift
         Sources/Vorssaint/Services/Prayer/PrayerLocationSupport.swift
         Sources/Vorssaint/Services/Prayer/PrayerSupport.swift
+        Sources/Vorssaint/Services/Notch/NotchPrayerSupport.swift
+        Sources/Vorssaint/Core/PrayerStrings.swift
         Sources/Vorssaint/Core/NotchLockScreenStrings.swift
         Sources/Vorssaint/Services/Notch/NotchLockScreenSupport.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageModels.swift

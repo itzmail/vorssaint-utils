@@ -95,6 +95,7 @@ enum NotchMusicVisibilityTests {
         var downloadName: String?
         var hasAgentActivity = false
         var hasKeepAwakeActivity = false
+        var hasPrayerActivity = false
         var awaitsTrackNotice = false
         var timerStripWing: CGFloat = 44
         func timerStripWing(for companion: NotchCompactActivity?, in geometry: NotchGeometry) -> CGFloat { timerStripWing }
@@ -106,6 +107,8 @@ enum NotchMusicVisibilityTests {
         func calendarStripWing(for companion: NotchCompactActivity?, in geometry: NotchGeometry) -> CGFloat { calendarStripWing }
         var keepAwakeStripWing: CGFloat = 44
         func keepAwakeStripWing(in geometry: NotchGeometry) -> CGFloat { keepAwakeStripWing }
+        var prayerStripWing: CGFloat = 44
+        func prayerStripWing(in geometry: NotchGeometry) -> CGFloat { prayerStripWing }
         var notchNeedsMonitor = false
         var heldDrag = false
         var pinned = false
@@ -421,6 +424,13 @@ enum NotchMusicVisibilityTests {
                         showsDownloads: false, wing: service.keepAwakeStripWing)
                      && service.surfaceSize == service.compactActivityGeometry.compactActivitySize,
                      "a running Keep Awake session takes the timer's wings in the closed island")
+        service.hasPrayerActivity = true
+        suite.expect(service.compactActivity == .prayer
+                     && service.compactActivityGeometry == service.geometry.compactTimerGeometry(
+                        showsDownloads: false, wing: service.prayerStripWing)
+                     && service.surfaceSize == service.compactActivityGeometry.compactActivitySize,
+                     "the minutes before a prayer outrank Keep Awake and take the timer's wings in the closed island")
+        service.hasPrayerActivity = false
         service.geometry = NotchGeometry(screen: CGRect(x: 0, y: 0, width: 1470, height: 956), safeAreaTop: 32,
                                          cameraWidth: 180, menuBarHeight: 32, compactSideRoom: 100)
         service.calendarStripWing = 66
