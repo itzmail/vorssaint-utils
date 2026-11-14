@@ -12,6 +12,7 @@ You can review or change every grant in System Settings, under Privacy and Secur
 | Microphone | Yes | Your voice in a screen recording, only when you turn it on |
 | Camera | Yes | The camera preview mirror, floating or inside the notch |
 | Calendars | Yes | Upcoming appointments in the notch |
+| Location Services | Yes | Picking the nearest city for the prayer times |
 | Bluetooth | Yes | Accessory battery levels in Monitor, optional accessory alerts in the notch and Bluetooth on sleep |
 | Files and Folders | Yes | Monitoring downloads in a folder you choose |
 | Notifications | Yes | Keep awake, battery, Monitor and update alerts |
@@ -89,6 +90,10 @@ The color picker also uses this permission for Vorssaint's magnifier and keyboar
 ## Calendars
 
 The optional notch calendar asks for access when you press its permission button. macOS calls this full calendar access; Vorssaint uses it only to read appointments and never modifies them. If access is denied, the calendar shows a System Settings shortcut while the rest of the notch remains available. Event content stays on this Mac.
+
+## Location Services
+
+The optional prayer times ask for your location when you leave Follow my location on, which is the default for that feature: the first time, then again every few hours while the Mac keeps running. Vorssaint uses it only to find the nearest listed city, within 250 km, and keeps that city, not the location. If you refuse, or the Mac is farther than that from every listed city, you pick the city by hand and nothing else changes. Turn Follow my location off and Vorssaint never asks.
 
 ## Bluetooth
 

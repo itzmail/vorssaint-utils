@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Vorssaint
 
+import CoreLocation
 import Foundation
 
 /// The prayer engine against Kemenag's own published 2026 schedule and against
@@ -21,6 +22,7 @@ enum PrayerEngineTests {
         currentAndNextContracts(suite)
         ummAlQuraContracts(suite)
         dueAndCountdownContracts(suite)
+        locationContracts(suite)
     }
 
     // MARK: Fixtures
@@ -361,5 +363,34 @@ enum PrayerEngineTests {
         suite.expect(PrayerEngine.countdown(jakarta, at: now, beforeMinutes: 0) == nil, "zero minutes switches it off")
         suite.expect(PrayerEngine.countdown(jakarta, at: at(jakarta, "2026-10-24", "14:51"), beforeMinutes: 10) == nil,
                      "at the minute it has moved on to Maghrib, out of reach")
+    }
+
+    // MARK: Location
+
+    private static func locationContracts(_ suite: TestSuite) {
+        suite.expect(list.place(near: -6.9025, longitude: 107.6188)?.id == "bandung",
+                     "a point in Bandung takes Kota Bandung")
+        suite.expect(list.place(near: 21.4225, longitude: 39.8262)?.id == "makkah", "a point at the Haram takes Makkah")
+        suite.expect(list.place(near: 0, longitude: -160) == nil && list.place(near: 51.5, longitude: -0.12) == nil,
+                     "beyond 250 km of every place a location picks none")
+        suite.expect(list.place(near: .nan, longitude: 100) == nil && list.place(near: 95, longitude: 0) == nil
+                        && list.place(near: 0, longitude: 200) == nil,
+                     "a point that is not on Earth picks none")
+
+        typealias Step = PrayerLocationSupport.Step
+        func step(_ status: CLAuthorizationStatus, asked: Bool = false, requested: Bool = false) -> Step {
+            PrayerLocationSupport.step(status: status, askedPerson: asked, requestedFix: requested)
+        }
+        suite.expect(step(.notDetermined) == .askPermission && step(.notDetermined, asked: true) == .wait,
+                     "the question to the person is asked once")
+        suite.expect(step(.denied) == .denied && step(.restricted) == .denied, "a refusal ends the ask")
+        suite.expect(step(.authorizedAlways) == .requestFix && step(.authorizedAlways, requested: true) == .wait,
+                     "once allowed the fix is asked for, once")
+        suite.expect(PrayerLocationSupport.outcome(latitude: -6.9, longitude: 107.6) == .at(latitude: -6.9, longitude: 107.6)
+                        && PrayerLocationSupport.outcome(latitude: .nan, longitude: 1) == .unknown,
+                     "a fix that is not a point is unknown")
+        suite.expect(PrayerLocationSupport.outcome(error: CLError(.denied)) == .denied
+                        && PrayerLocationSupport.outcome(error: CLError(.locationUnknown)) == .unknown,
+                     "an error says refused or unknown")
     }
 }

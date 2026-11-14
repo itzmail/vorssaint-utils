@@ -85,6 +85,19 @@ struct PrayerPlaceList {
             .map { (place: $0.0, kilometres: $0.1) }
     }
 
+    static func isPoint(latitude: Double, longitude: Double) -> Bool {
+        (-90.0...90.0).contains(latitude) && (-180.0...180.0).contains(longitude)
+    }
+
+    /// The listed place a point belongs to: the nearest, unless every place is
+    /// farther than `nearestLimit`, where the times would be minutes off.
+    func place(near latitude: Double, longitude: Double) -> PrayerPlace? {
+        guard Self.isPoint(latitude: latitude, longitude: longitude),
+              let found = nearest(latitude: latitude, longitude: longitude),
+              found.kilometres <= Self.nearestLimit else { return nil }
+        return found.place
+    }
+
     /// Great-circle distance in km (haversine).
     static func distance(_ lat1: Double, _ lng1: Double, _ lat2: Double, _ lng2: Double) -> Double {
         func radians(_ degrees: Double) -> Double { degrees * Double.pi / 180 }
