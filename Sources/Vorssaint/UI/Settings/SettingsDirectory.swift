@@ -549,6 +549,11 @@ enum SettingsDirectory {
                                       title: FeatureStrings.portManager(language).title,
                                       icon: "network",
                                       keywords: ["port", "ports", "listening", "socket", "PID", "kill port"]),
+                SettingsDirectoryItem(page: .prayer,
+                                      title: FeatureStrings.prayer(language).title,
+                                      icon: "moon.stars",
+                                      keywords: ["prayer", "adzan", "adhan", "azan", "sholat", "salat", "salah", "namaz",
+                                                 "subuh", "dzuhur", "ashar", "maghrib", "isya", "kemenag", "imsak"]),
             ]),
             (categories.utilities, [
                 SettingsDirectoryItem(page: .notch,

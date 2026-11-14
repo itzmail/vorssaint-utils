@@ -141,6 +141,7 @@ enum PrayerServiceTests {
         defaults.removePersistentDomain(forName: domain)
         defer { defaults.removePersistentDomain(forName: domain) }
         defaults.set(true, forKey: AppFeature.notch.availabilityKey)
+        defaults.set(true, forKey: AppFeature.prayer.availabilityKey)
         defaults.set(true, forKey: DefaultsKey.notchEnabled)
         suite.expect(!NotchSupport.routes(.prayer, in: defaults), "the prayer notice waits for the feature to be on")
         defaults.set(true, forKey: DefaultsKey.prayerEnabled)
@@ -169,6 +170,7 @@ enum PrayerServiceTests {
         defaults.removePersistentDomain(forName: domain)
         defer { defaults.removePersistentDomain(forName: domain) }
         defaults.set(true, forKey: AppFeature.notch.availabilityKey)
+        defaults.set(true, forKey: AppFeature.prayer.availabilityKey)
         defaults.set(true, forKey: DefaultsKey.notchEnabled)
         defaults.set(true, forKey: DefaultsKey.prayerEnabled)
         defaults.set(10, forKey: DefaultsKey.prayerRemindBefore)
