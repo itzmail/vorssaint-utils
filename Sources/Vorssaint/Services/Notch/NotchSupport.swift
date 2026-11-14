@@ -2078,7 +2078,7 @@ enum NotchSupport {
         // A layout notice needs no feature of its own, only its own toggle.
         case .inputSource: return true
         // Its own switch, the prayer times feature, is what `preferenceKey` reads.
-        case .prayer: return true
+        case .prayer: return PrayerSupport.isEnabled(in: defaults)
         }
     }
 

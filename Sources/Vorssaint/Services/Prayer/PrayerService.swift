@@ -103,7 +103,12 @@ final class PrayerService: ObservableObject {
         locate()
     }
 
-    var places: [PrayerPlace] { list?.places ?? [] }
+    /// Today's schedule at the chosen place, for Settings.
+    func today(now: Date = Date()) -> (site: PrayerSite, times: PrayerDayTimes)? {
+        guard let site else { return nil }
+        guard let times = PrayerEngine.dayTimes(site, day: site.localDay(Int(now.timeIntervalSince1970))) else { return nil }
+        return (site, times)
+    }
 
     func search(_ query: String, limit: Int = 8) -> [PrayerPlace] { list?.search(query, limit: limit) ?? [] }
 

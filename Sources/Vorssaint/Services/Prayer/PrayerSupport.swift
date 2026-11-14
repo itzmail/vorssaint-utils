@@ -79,7 +79,7 @@ enum PrayerSupport {
     // MARK: Preferences
 
     static func isEnabled(in defaults: UserDefaults = .standard) -> Bool {
-        defaults.bool(forKey: DefaultsKey.prayerEnabled)
+        AppFeature.prayer.isAvailable(in: defaults) && defaults.bool(forKey: DefaultsKey.prayerEnabled)
     }
 
     static func placeID(in defaults: UserDefaults = .standard) -> String? {
