@@ -19,6 +19,9 @@ struct NotchNotice: Equatable {
     /// With the companion on, it takes the symbol's place in the notice and
     /// plays this, so the notice itself is its reaction.
     var mascot: NotchMascotReaction? = nil
+    /// How long the notice stays when its event's usual time does not fit, as
+    /// a prayer notice that lasts as long as the adzan plays.
+    var lasts: TimeInterval? = nil
     /// A banner that replaces one still on screen keeps at least its wings,
     /// so a burst of messages does not resize the island with each one.
     var minimumWings = NotchNoticeWings.zero
@@ -553,6 +556,10 @@ final class NotchService: ObservableObject {
         return countdown.isShown(at: Date(), leadTime: calendar.countdownLeadTime)
     }
 
+    var hasPrayerActivity: Bool {
+        NotchPrayerSupport.showsActivity() && PrayerService.shared.countdown != nil
+    }
+
     var hasKeepAwakeActivity: Bool {
         NotchKeepAwakeSupport.showsActivity() && KeepAwakeManager.shared.isActive
     }
@@ -565,7 +572,8 @@ final class NotchService: ObservableObject {
     var compactActivities: [NotchCompactActivity] {
         NotchSupport.compactActivities(timer: hasTimerActivity, watch: hasWatchActivity, downloads: hasDownloadActivity,
                                       agents: hasAgentActivity, calendar: hasCalendarActivity,
-                                      music: hasMusicActivity, keepAwake: hasKeepAwakeActivity)
+                                      music: hasMusicActivity, keepAwake: hasKeepAwakeActivity,
+                                      prayer: hasPrayerActivity)
     }
 
     var showsCompactActivityPicker: Bool {
@@ -691,6 +699,8 @@ final class NotchService: ObservableObject {
                                                     paired: companion != nil)
         // Its reading is a countdown like the timer's, so it takes the timer's wings.
         case .keepAwake: return geometry.compactTimerGeometry(showsDownloads: false, wing: keepAwakeStripWing(in: geometry))
+        // The minutes left are a reading like the timer's, so it takes the timer's wings.
+        case .prayer: return geometry.compactTimerGeometry(showsDownloads: false, wing: prayerStripWing(in: geometry))
         default: return geometry
         }
     }
@@ -707,6 +717,11 @@ final class NotchService: ObservableObject {
             ]).width.rounded(.up)
         let inset = provisional.compactActivityEdgeInset(boxHeight: size * 0.72, radius: 0)
         return reading + inset + NotchTimerSupport.stripCameraGap
+    }
+
+    private func prayerStripWing(in geometry: NotchGeometry) -> CGFloat {
+        NotchPrayerSupport.stripWing(minutes: PrayerService.shared.countdown?.minutes ?? 1,
+                                     locale: Locale(identifier: L10n.shared.language.rawValue), in: geometry)
     }
 
     private func keepAwakeStripWing(in geometry: NotchGeometry) -> CGFloat {
@@ -1111,6 +1126,11 @@ final class NotchService: ObservableObject {
                 NotchKeepAwakeSupport.compactText(until: $0, now: Date(), locale: Locale(identifier: language.rawValue))
             }
             return layout.keepAwakeSurface(reading: reading, geometry: geometry)
+        case .prayer:
+            guard let countdown = PrayerService.shared.countdown else { return geometry.restingSize(showsContent: false) }
+            let reading = NotchPrayerSupport.compactText(minutes: countdown.minutes,
+                                                         locale: Locale(identifier: language.rawValue))
+            return layout.prayerSurface(reading: reading, geometry: geometry)
         }
     }
 
@@ -1201,7 +1221,7 @@ final class NotchService: ObservableObject {
         NotchAccessoryService.shared.syncWithPreferences()
         let signature = NotchEvent.allCases.map { String(NotchSupport.routes($0)) }.joined()
             + NotchSupport.idleContent().rawValue + String(NotchSupport.watchesMusicActivity())
-            + String(NotchKeepAwakeSupport.showsActivity())
+            + String(NotchKeepAwakeSupport.showsActivity()) + String(NotchPrayerSupport.showsActivity())
             + modules.map(\.rawValue).joined()
             + String(AppFeature.fanControl.isAvailable)
             + String(NotchSupport.routesShelf()) + String(NotchSupport.revealsShelfDrag())
@@ -2364,7 +2384,7 @@ final class NotchService: ObservableObject {
             inside = true
             holdNotification(id)
         } else {
-            scheduleNoticeDismissal(after: incoming.event.duration)
+            scheduleNoticeDismissal(after: incoming.lasts ?? incoming.event.duration)
         }
         return true
     }
@@ -2392,6 +2412,8 @@ final class NotchService: ObservableObject {
             }
             return
         }
+        // The prayer notice has no page: a click puts the adzan out of its way.
+        if selectedNotice.event == .prayer { finishPrayerNotice(); return }
         open(selectedNotice.event == .download ? .downloads : selectedNotice.event == .timer ? .timer
              : selectedNotice.event == .accessory ? .system : selectedNotice.event == .systemNotification ? .notifications
              : selectedNotice.event == .clipboard ? .clipboard : selectedNotice.event == .agents ? .agents
@@ -2499,6 +2521,18 @@ final class NotchService: ObservableObject {
     private func settleNotificationHover() {
         hoverWork?.cancel(); hoverWork = nil
         hoverState.close(pointerInside: windowHost?.containsHover(NSEvent.mouseLocation) == true)
+    }
+
+    /// A click on the prayer notice stops the adzan and takes the notice away.
+    func finishPrayerNotice() {
+        PrayerService.shared.stopAdzan()
+        dismissNotice()
+    }
+
+    /// The adzan ended: its notice leaves soon after.
+    func endPrayerNotice() {
+        guard notice?.event == .prayer else { return }
+        scheduleNoticeDismissal(after: 4)
     }
 
     private func dismissNotice() {
@@ -4279,6 +4313,16 @@ final class NotchService: ObservableObject {
             // change the reading and the wings it needs.
             let awake = KeepAwakeManager.shared
             awake.$isActive.combineLatest(awake.$endDate).removeDuplicates { $0 == $1 }
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    self?.syncMenuSpaceMonitoring()
+                    self?.objectWillChange.send()
+                    self?.refreshPresentation()
+                }.store(in: &subscriptions)
+        }
+        if NotchPrayerSupport.showsActivity() {
+            // The minutes left change the reading, and the wings it needs.
+            PrayerService.shared.$countdown.removeDuplicates()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     self?.syncMenuSpaceMonitoring()

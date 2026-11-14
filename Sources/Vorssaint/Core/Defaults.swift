@@ -885,6 +885,12 @@ enum DefaultsKey {
     static let notchNotificationsEnabled = "notchNotificationsEnabled"
     static let notchDismissNativeNotifications = "notchDismissNativeNotifications"
     static let notchTimerEnabled = "notchTimerEnabled"
+    static let prayerEnabled = "prayerEnabled"
+    static let prayerPlace = "prayerPlace"
+    static let prayerFollowLocation = "prayerFollowLocation"
+    static let prayerSound = "prayerSound"
+    static let prayerRemindBefore = "prayerRemindBefore"
+    static let prayerPauseMusic = "prayerPauseMusic"
     static let notchTimerMode = "notchTimerMode"
     static let notchTimerMinutes = "notchTimerMinutes"
     static let notchTimerSoundEnabled = "notchTimerSoundEnabled"
@@ -1510,6 +1516,11 @@ enum Defaults {
         DefaultsKey.notchNotificationsEnabled: true,
         DefaultsKey.notchDismissNativeNotifications: false,
         DefaultsKey.notchTimerEnabled: true,
+        DefaultsKey.prayerEnabled: false,
+        DefaultsKey.prayerFollowLocation: true,
+        DefaultsKey.prayerSound: PrayerSound.tone.rawValue,
+        DefaultsKey.prayerRemindBefore: 10,
+        DefaultsKey.prayerPauseMusic: true,
         DefaultsKey.notchTimerMode: NotchTimerMode.timer.rawValue,
         DefaultsKey.notchTimerMinutes: 15,
         DefaultsKey.notchTimerSoundEnabled: true,

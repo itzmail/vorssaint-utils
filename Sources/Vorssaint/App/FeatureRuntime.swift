@@ -382,6 +382,11 @@ final class FeatureRuntime: ObservableObject {
         .notchMascot: {
             if AppFeature.notch.isAvailable { NotchService.shared.syncWithPreferences() }
         },
+        .prayer: {
+            if AppFeature.prayer.isAvailable { PrayerService.shared.syncWithPreferences() }
+            else { PrayerService.shared.stop() }
+            if AppFeature.notch.isAvailable { NotchService.shared.syncWithPreferences() }
+        },
         .scratchpad: { ScratchpadService.shared.syncWithPreferences() },
         .commandBar: { CommandBarService.shared.syncWithPreferences() },
         .cleaner: {

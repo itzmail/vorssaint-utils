@@ -824,7 +824,7 @@ enum NotchMusicStripLayout {
 }
 
 enum NotchCompactActivity: String, Identifiable {
-    case timer, watch, downloads, agents, calendar, music, keepAwake
+    case timer, watch, downloads, agents, calendar, music, keepAwake, prayer
 
     var id: String { rawValue }
 
@@ -837,6 +837,7 @@ enum NotchCompactActivity: String, Identifiable {
         case .calendar: return FeatureStrings.notchCalendar(language).title
         case .music: return FeatureStrings.notch(language).music
         case .keepAwake: return Strings.localized(language).keepAwakeTitle
+        case .prayer: return FeatureStrings.prayer(language).title
         }
     }
 
@@ -850,11 +851,17 @@ enum NotchCompactActivity: String, Identifiable {
         case .calendar: return .calendar
         case .music: return .music
         case .keepAwake: return .controls
+        // It has no page: a click on its strip opens the island at Controls, as Keep Awake's does.
+        case .prayer: return .controls
         }
     }
 
     var symbol: String {
-        self == .keepAwake ? NotchControlItem.keepAwake.symbol : module.symbol
+        switch self {
+        case .keepAwake: return NotchControlItem.keepAwake.symbol
+        case .prayer: return NotchPrayerSupport.symbol
+        default: return module.symbol
+        }
     }
 }
 
@@ -1162,6 +1169,14 @@ enum NotchCapsuleLayout {
         let right = reading.map { width(NotchAgentSupport.readingShape($0), font: readingFont) }
             ?? NotchKeepAwakeSupport.symbolWidth(NotchKeepAwakeSupport.openSymbol, size: readingFont.pointSize) + air
         return surface(content: cup + spacing + right, maximum: Maximum.activity, geometry: geometry)
+    }
+
+    /// The minutes before a prayer: the moon, wider than other marks, and the
+    /// time left measured by its shape.
+    static func prayerSurface(reading: String, geometry: NotchGeometry) -> CGSize {
+        let moon = NotchKeepAwakeSupport.symbolWidth(NotchPrayerSupport.symbol, size: symbolSize)
+        return surface(content: moon + spacing + width(NotchAgentSupport.readingShape(reading), font: readingFont),
+                       maximum: Maximum.activity, geometry: geometry)
     }
 
     /// Working agents' marks and the reading the person chose.
@@ -1602,7 +1617,7 @@ enum NotchQuickAccessLayout {
 }
 
 enum NotchEvent: String, CaseIterable {
-    case volume, brightness, battery, clipboard, capture, systemNotification, keyboardLight, timer, accessory, download, agents, track, microphone, watch, inputSource
+    case volume, brightness, battery, clipboard, capture, systemNotification, keyboardLight, timer, accessory, download, agents, track, microphone, watch, inputSource, prayer
 
     var preferenceKey: String {
         switch self {
@@ -1616,6 +1631,7 @@ enum NotchEvent: String, CaseIterable {
         case .systemNotification: return DefaultsKey.notchNotificationsEnabled
         case .keyboardLight: return DefaultsKey.notchKeyboardLight
         case .inputSource: return DefaultsKey.notchInputSource
+        case .prayer: return DefaultsKey.prayerEnabled
         case .volume: return DefaultsKey.notchVolume
         case .brightness: return DefaultsKey.notchBrightness
         case .battery: return DefaultsKey.notchBattery
@@ -1627,7 +1643,7 @@ enum NotchEvent: String, CaseIterable {
     var priority: Int {
         switch self {
         case .volume, .brightness, .keyboardLight, .microphone, .inputSource: return 3
-        case .capture, .timer, .watch: return 2
+        case .capture, .timer, .watch, .prayer: return 2
         case .battery, .systemNotification, .accessory, .agents: return 1
         case .clipboard, .download, .track: return 0
         }
@@ -1638,6 +1654,7 @@ enum NotchEvent: String, CaseIterable {
         case .volume, .brightness, .keyboardLight, .microphone, .inputSource: return 1.6
         case .systemNotification, .track: return 3
         case .timer, .download, .watch: return 6
+        case .prayer: return 10
         case .agents: return 5
         case .battery, .accessory: return 4
         case .clipboard: return 2.5
@@ -1800,10 +1817,11 @@ enum NotchSupport {
     /// music plays, and it only says that the Mac stays awake. A watch
     /// follows the timer: the person started both and is waiting on them.
     static func compactActivities(timer: Bool, watch: Bool = false, downloads: Bool, agents: Bool,
-                                  calendar: Bool, music: Bool, keepAwake: Bool = false) -> [NotchCompactActivity] {
+                                  calendar: Bool, music: Bool, keepAwake: Bool = false,
+                                  prayer: Bool = false) -> [NotchCompactActivity] {
         let candidates: [(Bool, NotchCompactActivity)] = [
             (timer, .timer), (watch, .watch), (downloads, .downloads), (agents, .agents),
-            (calendar, .calendar), (music, .music), (keepAwake, .keepAwake)
+            (calendar, .calendar), (prayer, .prayer), (music, .music), (keepAwake, .keepAwake)
         ]
         return candidates.compactMap { $0.0 ? $0.1 : nil }
     }
@@ -2059,6 +2077,8 @@ enum NotchSupport {
         case .track: return modules(in: defaults).contains(.music)
         // A layout notice needs no feature of its own, only its own toggle.
         case .inputSource: return true
+        // Its own switch, the prayer times feature, is what `preferenceKey` reads.
+        case .prayer: return PrayerSupport.isEnabled(in: defaults)
         }
     }
 
