@@ -17,6 +17,9 @@ dist/
 AGENTS.md
 CLAUDE.md
 
+# CodeGraph index
+.codegraph/
+
 # macOS noise
 .DS_Store
 
