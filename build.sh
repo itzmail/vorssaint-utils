@@ -297,6 +297,9 @@ if (( TEST )); then
         Sources/Vorssaint/Core/CodexAccountStrings.swift
         Sources/Vorssaint/Core/ClaudeAccountStrings.swift
         Sources/Vorssaint/Services/Notch/NotchAgentSupport.swift
+        Sources/Vorssaint/Services/Prayer/PrayerAstronomy.swift
+        Sources/Vorssaint/Services/Prayer/PrayerEngine.swift
+        Sources/Vorssaint/Services/Prayer/PrayerPlaces.swift
         Sources/Vorssaint/Core/NotchLockScreenStrings.swift
         Sources/Vorssaint/Services/Notch/NotchLockScreenSupport.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageModels.swift
