@@ -300,6 +300,7 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Prayer/PrayerAstronomy.swift
         Sources/Vorssaint/Services/Prayer/PrayerEngine.swift
         Sources/Vorssaint/Services/Prayer/PrayerPlaces.swift
+        Sources/Vorssaint/Services/Prayer/PrayerLocationSupport.swift
         Sources/Vorssaint/Core/NotchLockScreenStrings.swift
         Sources/Vorssaint/Services/Notch/NotchLockScreenSupport.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageModels.swift
