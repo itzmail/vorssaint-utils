@@ -14,6 +14,7 @@ enum PrayerServiceTests {
         textContracts(suite)
         noticeContracts(suite)
         activityContracts(suite)
+        pageContracts(suite)
     }
 
     private static let jakarta = PrayerSite(latitude: -6.1833, longitude: 106.8333, offset: 420, horizon: -1,
@@ -204,5 +205,39 @@ enum PrayerServiceTests {
         suite.expect(NotchPrayerSupport.compactText(minutes: 8, locale: locale) == NotchTimerSupport.compactText(480, locale: locale)
                         && NotchPrayerSupport.compactText(minutes: 60, locale: locale) == NotchTimerSupport.hoursText(hours: 1, minutes: 0),
                      "the reading takes the timer strip's shapes")
+    }
+
+    private static func pageContracts(_ suite: TestSuite) {
+        let name = "vorss.tests.PrayerPageTests.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: name) else { return }
+        defer { defaults.removePersistentDomain(forName: name) }
+        defaults.set(true, forKey: AppFeature.notch.availabilityKey)
+        defaults.set(true, forKey: DefaultsKey.notchEnabled)
+        suite.expect(!NotchSupport.modules(in: defaults).contains(.prayer), "no page while the feature is not installed")
+        defaults.set(true, forKey: AppFeature.prayer.availabilityKey)
+        suite.expect(!NotchSupport.modules(in: defaults).contains(.prayer), "no page while prayer times are off")
+        defaults.set(true, forKey: DefaultsKey.prayerEnabled)
+        suite.expect(NotchSupport.modules(in: defaults).contains(.prayer), "the page comes with the feature on")
+        defaults.set("prayer", forKey: DefaultsKey.notchHiddenModules)
+        suite.expect(!NotchSupport.modules(in: defaults).contains(.prayer), "the page can be hidden like any other")
+        suite.expect(NotchCompactActivity.prayer.module == .prayer, "the countdown strip opens the page")
+
+        // The day's arc: midnight at the left end, each prayer at its slot's middle.
+        let midnight = 1_000_000
+        let at = [4, 12, 15, 18, 19].map { midnight + $0 * 3600 }
+        let slots = NotchPrayerSupport.slots
+        func position(_ hours: Double) -> Double {
+            NotchPrayerSupport.dayPosition(now: midnight + Int(hours * 3600), midnight: midnight, at: at)
+        }
+        suite.expect(position(0) == 0 && abs(position(4) - slots[0]) < 1e-9 && abs(position(19) - slots[4]) < 1e-9,
+                     "midnight starts the arc and a prayer sits on its dot")
+        suite.expect(abs(position(8) - (slots[0] + slots[1]) / 2) < 1e-9,
+                     "the time between two prayers spreads evenly between their dots")
+        suite.expect(abs(position(2) - slots[0] / 2) < 1e-9 && abs(position(21.5) - (slots[4] + 1) / 2) < 1e-9
+                        && position(30) == 1 && position(-3) == 0,
+                     "the night runs out to the arc's ends and never past them")
+        suite.expect(NotchPrayerSupport.countdownText(seconds: 5099) == "01:24:59"
+                        && NotchPrayerSupport.countdownText(seconds: -4) == "00:00:00",
+                     "the countdown reads hours, minutes and seconds")
     }
 }

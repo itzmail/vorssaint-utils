@@ -9,6 +9,32 @@ import AppKit
 enum NotchPrayerSupport {
     static let symbol = "moon.stars.fill"
 
+    // MARK: The page
+
+    /// The page's height: the next prayer beside today's arc.
+    static let pageHeight: CGFloat = 128
+    /// The prayers sit at the middles of five equal slots along the arc; the
+    /// night before Subuh and after Isya runs out to its ends.
+    static let slots: [Double] = [0.1, 0.3, 0.5, 0.7, 0.9]
+
+    /// Where `now` sits along the day's arc, 0 (the place's midnight) to 1
+    /// (the next midnight): each prayer at the middle of its slot, the time
+    /// between two prayers spread evenly between their dots.
+    static func dayPosition(now: Int, midnight: Int, at: [Int]) -> Double {
+        let marks = [(midnight, 0.0)] + zip(at, slots).map { ($0, $1) } + [(midnight + 86_400, 1.0)]
+        for (from, to) in zip(marks, marks.dropFirst()) where now < to.0 {
+            let part = Double(now - from.0) / Double(max(1, to.0 - from.0))
+            return from.1 + (to.1 - from.1) * min(1, max(0, part))
+        }
+        return 1
+    }
+
+    /// "01:24:59": hours, minutes and seconds to go.
+    static func countdownText(seconds: Int) -> String {
+        let left = max(0, seconds)
+        return String(format: "%02d:%02d:%02d", left / 3600, left / 60 % 60, left % 60)
+    }
+
     static func showsActivity(in defaults: UserDefaults = .standard) -> Bool {
         NotchSupport.isEnabled(in: defaults) && PrayerSupport.isEnabled(in: defaults)
             && PrayerSupport.remindBeforeMinutes(in: defaults) > 0
