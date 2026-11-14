@@ -1578,6 +1578,7 @@ def main():
           + "}\nextension NotchScreenEdgeClickTests {\nfinal class Service: State {\n"
           + "func open(_ module: NotchModule? = nil) { openings += 1; opened = module; expanded = true; syncScreenEdgeClicks() }\n"
           + "func refreshPresentation(animated: Bool) { syncScreenEdgeClicks() }\n"
+          + "func finishPrayerNotice() {}\n"
           + "".join(declaration(notch, prefix).replace("    private ", "    ", 1) for prefix in [
               "    var stripNotice:", "    private var noticeCanPresent:", "    var acceptsUserInteraction:",
               "    var acceptsSystemFeedback:", "    func activateNotice(",

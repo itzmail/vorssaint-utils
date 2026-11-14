@@ -12,6 +12,8 @@ enum PrayerServiceTests {
         locationContracts(suite)
         preferenceContracts(suite)
         textContracts(suite)
+        noticeContracts(suite)
+        activityContracts(suite)
     }
 
     private static let jakarta = PrayerSite(latitude: -6.1833, longitude: 106.8333, offset: 420, horizon: -1,
@@ -129,5 +131,76 @@ enum PrayerServiceTests {
                      "a notice says when and where")
         suite.expect(PrayerSupport.detail(moment, site: jakarta, placeLabel: "") == "14:51",
                      "without a place it says only when")
+    }
+
+    // MARK: Island notice
+
+    private static func noticeContracts(_ suite: TestSuite) {
+        let domain = "com.vorssaint.tests.prayer-notice"
+        let defaults = UserDefaults(suiteName: domain)!
+        defaults.removePersistentDomain(forName: domain)
+        defer { defaults.removePersistentDomain(forName: domain) }
+        defaults.set(true, forKey: AppFeature.notch.availabilityKey)
+        defaults.set(true, forKey: DefaultsKey.notchEnabled)
+        suite.expect(!NotchSupport.routes(.prayer, in: defaults), "the prayer notice waits for the feature to be on")
+        defaults.set(true, forKey: DefaultsKey.prayerEnabled)
+        suite.expect(NotchSupport.routes(.prayer, in: defaults), "and comes once it is")
+        defaults.set(false, forKey: DefaultsKey.notchEnabled)
+        suite.expect(!NotchSupport.routes(.prayer, in: defaults), "without the island there is no notice")
+        suite.expect(NotchEvent.prayer.priority > NotchEvent.agents.priority
+                        && NotchEvent.prayer.priority < NotchEvent.volume.priority,
+                     "a prayer notice takes the place of a passing one but not of a key's feedback")
+        suite.expect(NotchEvent.prayer.duration >= 8, "the notice stays long enough to read")
+    }
+
+    // MARK: Island strip
+
+    private static func activityContracts(_ suite: TestSuite) {
+        let english = FeatureStrings.prayer(.enUS)
+        for language in AppLanguage.allCases {
+            LocalizationTests.check(FeatureStrings.prayer(language), against: english,
+                                    name: "prayer strings in \(language.rawValue)", suite: suite)
+        }
+        suite.expect(english.countdownText(10) == "10 min before" && english.spokenText(prayer: "Ashar", minutes: 8) == "Ashar in 8 min",
+                     "the formatted strings take their numbers")
+
+        let domain = "com.vorssaint.tests.prayer-strip"
+        let defaults = UserDefaults(suiteName: domain)!
+        defaults.removePersistentDomain(forName: domain)
+        defer { defaults.removePersistentDomain(forName: domain) }
+        defaults.set(true, forKey: AppFeature.notch.availabilityKey)
+        defaults.set(true, forKey: DefaultsKey.notchEnabled)
+        defaults.set(true, forKey: DefaultsKey.prayerEnabled)
+        defaults.set(10, forKey: DefaultsKey.prayerRemindBefore)
+        suite.expect(NotchPrayerSupport.showsActivity(in: defaults), "the countdown shows with the island and the feature on")
+        defaults.set(0, forKey: DefaultsKey.prayerRemindBefore)
+        suite.expect(!NotchPrayerSupport.showsActivity(in: defaults), "a countdown of zero minutes is off")
+        defaults.set(10, forKey: DefaultsKey.prayerRemindBefore)
+        defaults.set(false, forKey: DefaultsKey.prayerEnabled)
+        suite.expect(!NotchPrayerSupport.showsActivity(in: defaults), "and so is one for a feature that is off")
+        defaults.set(true, forKey: DefaultsKey.prayerEnabled)
+        defaults.set(false, forKey: DefaultsKey.notchEnabled)
+        suite.expect(!NotchPrayerSupport.showsActivity(in: defaults), "without the island there is no strip")
+
+        suite.expect(NotchSupport.compactActivities(timer: false, downloads: false, agents: false, calendar: true,
+                                                    music: true, prayer: true) == [.calendar, .prayer, .music],
+                     "the countdown comes after an event and before music")
+        suite.expect(NotchSupport.compactActivities(timer: true, downloads: false, agents: false, calendar: false,
+                                                    music: false, keepAwake: true, prayer: true) == [.timer, .prayer, .keepAwake],
+                     "and before Keep Awake")
+        suite.expect(NotchSupport.compactActivities(timer: false, downloads: false, agents: false, calendar: false,
+                                                    music: false).isEmpty,
+                     "without it nothing is added")
+        suite.expect(NotchSupport.compactCompanions(of: .prayer, timer: true, running: true, downloads: true,
+                                                    agents: true, calendar: true, music: true).isEmpty,
+                     "the countdown shares its capsule with nothing")
+        suite.expect(NotchCompactActivity.prayer.symbol == NotchPrayerSupport.symbol
+                        && NotchCompactActivity.prayer.title(.enUS) == "Prayer times",
+                     "the activity has its mark and name")
+
+        let locale = Locale(identifier: "en-US")
+        suite.expect(NotchPrayerSupport.compactText(minutes: 8, locale: locale) == NotchTimerSupport.compactText(480, locale: locale)
+                        && NotchPrayerSupport.compactText(minutes: 60, locale: locale) == NotchTimerSupport.hoursText(hours: 1, minutes: 0),
+                     "the reading takes the timer strip's shapes")
     }
 }

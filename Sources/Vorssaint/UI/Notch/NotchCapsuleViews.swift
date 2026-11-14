@@ -429,7 +429,7 @@ private struct NotchCapsuleCompanionMark: View {
                     NotchCapsuleCalendarStrip.clockMark(countdown, now: context.date)
                 }
             }
-        case .timer, .keepAwake, .watch:
+        case .timer, .keepAwake, .watch, .prayer:
             EmptyView()
         }
     }
@@ -715,6 +715,49 @@ struct NotchCapsuleKeepAwakeStrip: View {
         .accessibilityValue(NotchKeepAwakeStrip.status(end: end, language: l10n.language))
         .accessibilityHint(FeatureStrings.notch(l10n.language).open)
         .accessibilityIdentifier("notch.keepAwake")
+    }
+}
+
+/// The same countdown on a display without a camera housing, as a capsule.
+struct NotchCapsulePrayerStrip: View {
+    @ObservedObject var service: NotchService
+    let size: CGSize
+    /// Another display's capsule, when the island shows on every display.
+    var displayGeometry: NotchGeometry? = nil
+    @ObservedObject private var prayer = PrayerService.shared
+    @ObservedObject private var l10n = L10n.shared
+
+    var body: some View {
+        NotchStripHold(prayer.countdown, shows: prayer.countdown != nil) { countdown in
+            if let countdown { row(countdown) }
+        }
+    }
+
+    private func row(_ countdown: PrayerCountdown) -> some View {
+        let text = NotchPrayerSupport.compactText(minutes: countdown.minutes,
+                                                  locale: Locale(identifier: l10n.language.rawValue))
+        return NotchCapsuleRow(size: size, geometry: displayGeometry ?? service.geometry) {
+            HStack(spacing: CapsuleLayout.spacing) {
+                // The moon is wider than the slot other marks share; the
+                // capsule measures it as drawn.
+                Image(systemName: NotchPrayerSupport.symbol)
+                    .font(.system(size: CapsuleLayout.symbolSize, weight: .medium))
+                    .foregroundStyle(.mint)
+                    .capsuleCentred(NotchPrayerSupport.symbol)
+                Text(text)
+                    .font(Font(CapsuleLayout.readingFont as CTFont))
+                    .foregroundStyle(.mint)
+                    .lineLimit(1).fixedSize()
+                    .onChange(of: NotchAgentSupport.readingShape(text)) { _, _ in
+                        DispatchQueue.main.async { service.refreshPresentation() }
+                    }
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(FeatureStrings.prayer(l10n.language).title)
+        .accessibilityValue(NotchPrayerStrip.spoken(countdown, language: l10n.language))
+        .accessibilityHint(FeatureStrings.notch(l10n.language).open)
+        .accessibilityIdentifier("notch.prayer")
     }
 }
 

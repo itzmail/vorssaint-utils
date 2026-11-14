@@ -43,6 +43,8 @@ final class PrayerService: ObservableObject {
     private var running = false
 
     private static let tick: TimeInterval = 5
+    /// The notice stays while the adzan plays: the recording is a little under three minutes.
+    private static let adzanNotice: TimeInterval = 200
 
     private init() {
         player.onFinish = { [weak self] in self?.adzanEnded() }
@@ -178,8 +180,17 @@ final class PrayerService: ObservableObject {
     /// A prayer's time came: the chosen sound plays and the island says so.
     /// Quiet when it is late (after a sleep) or a full-screen app hides the island.
     private func announce(_ fire: PrayerFire) {
-        let ring = fire.due == .ring && !NotchService.shared.hiddenInFullscreen
-        play(PrayerSupport.playback(fire.moment.prayer, sound: PrayerSupport.sound(), ring: ring))
+        deliver(fire.moment, ring: fire.due == .ring && !NotchService.shared.hiddenInFullscreen)
+    }
+
+    private func deliver(_ moment: PrayerMoment, ring: Bool) {
+        guard let site else { return }
+        play(PrayerSupport.playback(moment.prayer, sound: PrayerSupport.sound(), ring: ring))
+        NotchService.shared.show(NotchNotice(
+            event: .prayer, title: moment.prayer.name,
+            detail: PrayerSupport.detail(moment, site: site, placeLabel: place?.label ?? ""),
+            symbol: adzanPlaying ? "speaker.wave.2.fill" : "moon.stars.fill",
+            lasts: adzanPlaying ? Self.adzanNotice : nil))
     }
 
     private func play(_ playback: PrayerPlayback) {
@@ -207,11 +218,14 @@ final class PrayerService: ObservableObject {
 
     private func adzanEnded() {
         adzanPlaying = false
+        NotchService.shared.endPrayerNotice()
     }
 
-    /// Settings' test button: what the chosen sound does for an ordinary prayer.
+    /// Settings' test button: what an ordinary prayer's time does, sound and notice.
     func test() {
-        play(PrayerSupport.playback(.ashar, sound: PrayerSupport.sound(), ring: true))
+        guard let site else { return }
+        let now = Self.now()
+        deliver(PrayerMoment(prayer: .ashar, at: now, end: now, day: site.localDay(now)), ring: true)
     }
 
     // MARK: Files
