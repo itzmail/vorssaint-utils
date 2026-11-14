@@ -301,6 +301,7 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Prayer/PrayerEngine.swift
         Sources/Vorssaint/Services/Prayer/PrayerPlaces.swift
         Sources/Vorssaint/Services/Prayer/PrayerLocationSupport.swift
+        Sources/Vorssaint/Services/Prayer/PrayerSupport.swift
         Sources/Vorssaint/Core/NotchLockScreenStrings.swift
         Sources/Vorssaint/Services/Notch/NotchLockScreenSupport.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageModels.swift
@@ -714,6 +715,8 @@ mkdir -p "$STAGE/Contents/Frameworks"
 cp "build/$NOW_PLAYING_ADAPTER" "$STAGE/Contents/Frameworks/$NOW_PLAYING_ADAPTER"
 cp Resources/now-playing.pl "$STAGE/Contents/Resources/now-playing.pl"
 cp Resources/agent-prices.json "$STAGE/Contents/Resources/agent-prices.json"
+mkdir -p "$STAGE/Contents/Resources/Prayer"
+cp Resources/Prayer/places.json Resources/Prayer/adzan.m4a Resources/Prayer/NOTICE.txt "$STAGE/Contents/Resources/Prayer/"
 cp Resources/com.vorssaint.utils.fan-control.plist \
     "$STAGE/Contents/Library/LaunchDaemons/$FAN_HELPER_ID.plist"
 cp Resources/Info.plist "$STAGE/Contents/Info.plist"
