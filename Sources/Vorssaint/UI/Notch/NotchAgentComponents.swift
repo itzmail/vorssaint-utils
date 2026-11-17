@@ -353,6 +353,8 @@ enum AgentMarks {
     }
 
     private static func lookUp(_ provider: AgentProvider) -> Mark? {
+        // Terminal tools: a drawn mark, no desktop app to borrow one from.
+        if let drawn = AgentDrawnMarks.image(for: provider) { return .template(drawn) }
         for identifier in provider.appIdentifiers {
             guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier) else { continue }
             if let bundle = Bundle(url: url) {
