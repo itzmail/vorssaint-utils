@@ -671,7 +671,7 @@ private struct NotchAgentLiveCard: View {
             Spacer(minLength: 4)
             Text(snapshot.lastActivity[provider].map {
                 $0.formatted(.relative(presentation: .named, unitsStyle: .abbreviated).locale(locale))
-            } ?? text.idle)
+            } ?? snapshot.peakUsedFraction(provider).map { AgentFormat.percent($0, locale: locale) } ?? text.idle)
                 .font(.system(size: 9.5))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)

@@ -208,7 +208,7 @@ enum PrayerServiceTests {
     }
 
     private static func pageContracts(_ suite: TestSuite) {
-        let name = "PrayerPageTests.\(UUID().uuidString)"
+        let name = "vorss.tests.PrayerPageTests.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: name) else { return }
         defer { defaults.removePersistentDomain(forName: name) }
         defaults.set(true, forKey: AppFeature.notch.availabilityKey)

@@ -315,9 +315,13 @@ if (( TEST )); then
         Sources/Vorssaint/Services/AgentUsage/Harness/CodexReader.swift
         Sources/Vorssaint/Services/AgentUsage/Harness/OpenCodeReader.swift
         Sources/Vorssaint/Services/AgentUsage/Harness/CopilotReader.swift
+        Sources/Vorssaint/Services/AgentUsage/Harness/CommandCodeReader.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageSummary.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageStore.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageArchive.swift
+        Sources/Vorssaint/Services/AgentUsage/AgentLocalActivity.swift
+        Sources/Vorssaint/Services/AgentUsage/AgentTurnReader.swift
+        Sources/Vorssaint/Services/AgentUsage/AgentAntigravityUsage.swift
         Sources/Vorssaint/Services/AgentUsage/AgentClaudeAppUsage.swift
         Sources/Vorssaint/Services/AgentUsage/AgentCLIConversation.swift
         Sources/Vorssaint/Services/AgentUsage/AgentClaudeServer.swift
