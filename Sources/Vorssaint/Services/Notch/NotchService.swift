@@ -1747,13 +1747,6 @@ final class NotchService: ObservableObject {
     /// A mirrored banner waits under the pointer, as the native one does, and
     /// a deliberate hover opens its whole message in place.
     private func holdNotification(_ id: UUID) {
-        // With no preview to open, holding a banner over the music strip only
-        // keeps the song's controls out of the pointer's reach: it times out.
-        if !UserDefaults.standard.bool(forKey: DefaultsKey.notchOpenOnHover), compactActivity == .music,
-           !noticeExpanded, let notice {
-            if noticeWork == nil { scheduleNoticeDismissal(after: notice.event.duration) }
-            return
-        }
         noticeWork?.cancel(); noticeWork = nil
         guard !noticeExpanded, !hoverState.suppressed,
               UserDefaults.standard.bool(forKey: DefaultsKey.notchOpenOnHover) else { return }
