@@ -1711,6 +1711,26 @@ enum NotchHoverTests {
         DispatchQueue.main.advance(0.2)
         expect(clickOnly.notice == nil, "a held banner resumes its timer once the pointer leaves")
 
+        // Issue #4276: with no preview to open, a banner over the music strip
+        // keeps its timer, so a pointer that came to pause the song gets the
+        // strip back instead of holding the banner in its place.
+        let overMusic = fixture(false)
+        UserDefaults.standard.enabled = false
+        overMusic.compactActivity = .music
+        arrive(overMusic)
+        overMusic.hover(true)
+        expect(overMusic.noticeWork != nil && overMusic.notice != nil && overMusic.hoverWork == nil,
+               "click-only opening does not hold a banner covering the music strip")
+        DispatchQueue.main.advance(3.1)
+        expect(overMusic.notice == nil, "the banner over the music strip ends on time under a still pointer")
+
+        let previewOverMusic = fixture(false)
+        previewOverMusic.compactActivity = .music
+        arrive(previewOverMusic)
+        previewOverMusic.hover(true)
+        expect(previewOverMusic.noticeWork == nil && previewOverMusic.notice != nil,
+               "with hover opening on, a banner over the music strip is still held to open its preview")
+
         let preview = fixture(false)
         UserDefaults.standard.expands = false
         arrive(preview)
