@@ -6,7 +6,7 @@ import Foundation
 /// The coding agents whose session logs the island reads. Their names are
 /// product names and stay untranslated.
 enum AgentProvider: String, CaseIterable, Identifiable, Codable {
-    case claude, codex, opencode, copilot, commandcode, antigravity
+    case claude, codex, opencode, copilot, cursor, commandcode, antigravity
 
     var id: String { rawValue }
 
@@ -16,6 +16,7 @@ enum AgentProvider: String, CaseIterable, Identifiable, Codable {
         case .codex: return "Codex"
         case .opencode: return "OpenCode"
         case .copilot: return "GitHub Copilot"
+        case .cursor: return "Cursor"
         case .commandcode: return "Command Code"
         case .antigravity: return "Antigravity"
         }
@@ -27,13 +28,14 @@ enum AgentProvider: String, CaseIterable, Identifiable, Codable {
         case .codex: return "chevron.left.forwardslash.chevron.right"
         case .opencode: return "terminal"
         case .copilot: return "infinity"
+        case .cursor: return "cursorarrow"
         case .commandcode: return "command"
         case .antigravity: return "arrow.up.circle"
         }
     }
 
     /// Whether the provider records a plan allowance in its local logs.
-    var reportsLimits: Bool { self != .copilot }
+    var reportsLimits: Bool { self != .copilot && self != .cursor }
 
     /// Whether the provider writes session logs the island can read. The
     /// others are known only by their plan limits, asked of the account.
@@ -189,5 +191,5 @@ enum AgentUsageEvent: Equatable {
     case finished(provider: AgentProvider, duration: TimeInterval, cost: Double, tokens: Int, project: String)
     case limitWarning(provider: AgentProvider, window: AgentLimitWindow)
     case limitReset(provider: AgentProvider, window: AgentLimitWindow)
-    case budgetReached(spent: Double, budget: Double)
+    case budgetReached(spent: Double, budget: Double, partial: Bool)
 }

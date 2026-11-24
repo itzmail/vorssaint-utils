@@ -29,6 +29,7 @@ enum DefaultsKey {
     static let keepAwakeAllowDisplaySleep = "keepAwakeAllowDisplaySleep"
     static let keepAwakeExternalDisplay = "keepAwakeExternalDisplay"
     static let keepAwakeConnectedToPower = "keepAwakeConnectedToPower"
+    static let keepAwakePowerDisconnectDelay = "keepAwakePowerDisconnectDelaySeconds"
     static let keepAwakeRunningApps = "keepAwakeRunningApps"
     static let keepAwakeRunningAppBundleIDs = "keepAwakeRunningAppBundleIDs"
     // Match mode over the automation conditions: false is Any (one matching
@@ -254,6 +255,9 @@ enum DefaultsKey {
     // The read checksum fix needs its own recheck even if the paired-request
     // migration already ran and cached the monitor as write-only again.
     static let brightnessDDCReadChecksumRechecked = "brightnessDDCReadChecksumRechecked"
+    // Monitors behind an MCDP29XX HDMI converter were probed at an address
+    // it swallows; recheck them once now that it is addressed.
+    static let brightnessDDCHDMIConverterRechecked = "brightnessDDCHDMIConverterRechecked"
     /// A beta already installed the companion for this Command Bar user, once.
     static let notchMascotBetaInstalled = "notchMascotBetaInstalled"
     // Per-monitor connection paths a person has told this app to dim in
@@ -625,6 +629,7 @@ enum DefaultsKey {
     static let screenOCRDetectQRCodes = "screenOCRDetectQRCodes" // QR content wins over OCR text
     static let micMuteShortcutEnabled = "micMuteShortcutEnabled"
     static let micMuteShortcut = "micMuteShortcut"
+    static let micMuteFollowCallApps = "micMuteFollowCallApps"
     static let quitAppsShortcutEnabled = "quitAppsShortcutEnabled"
     static let quitAppsShortcut = "quitAppsShortcut"
     static let quitAppsExceptFrontShortcutEnabled = "quitAppsExceptFrontShortcutEnabled"
@@ -933,6 +938,7 @@ enum DefaultsKey {
     static let notchAgentsCopilot = "notchAgentsCopilot"
     static let notchAgentsCommandCode = "notchAgentsCommandCode"
     static let notchAgentsAntigravity = "notchAgentsAntigravity"
+    static let notchAgentsCursor = "notchAgentsCursor"
     static let notchAgentsCardOrder = "notchAgentsCardOrder"
     static let notchAgentsHiddenCards = "notchAgentsHiddenCards"
     static let notchAgentsPeriod = "notchAgentsPeriod"
@@ -1216,6 +1222,7 @@ enum Defaults {
     static let allowedDurations = [0, 15, 30, 60, 120, 240, 480]
     static let allowedKeepAwakeMouseJiggleIntervals = [1, 2, 5, 10, 15]
     static let allowedBatteryLimits = [0, 5, 10, 15, 20]
+    static let allowedKeepAwakePowerDisconnectDelays = Array(stride(from: 0, through: 60, by: 5))
     static let allowedMonitorIntervals = [1, 2, 5]
     static let defaultKeyboardDebounceWindowMs = 5
     static let defaultSnippetSoundName = "Tink"
@@ -1261,6 +1268,7 @@ enum Defaults {
         DefaultsKey.keepAwakeAllowDisplaySleep: false,
         DefaultsKey.keepAwakeExternalDisplay: false,
         DefaultsKey.keepAwakeConnectedToPower: false,
+        DefaultsKey.keepAwakePowerDisconnectDelay: 0,
         DefaultsKey.keepAwakeRunningApps: false,
         DefaultsKey.keepAwakeRunningAppBundleIDs: [String](),
         DefaultsKey.keepAwakeAutomationRequireAll: false,
@@ -1548,6 +1556,7 @@ enum Defaults {
         DefaultsKey.notchAgentsCopilot: true,
         DefaultsKey.notchAgentsCommandCode: true,
         DefaultsKey.notchAgentsAntigravity: true,
+        DefaultsKey.notchAgentsCursor: true,
         DefaultsKey.notchAgentsCardOrder: "",
         DefaultsKey.notchAgentsHiddenCards: "",
         DefaultsKey.notchAgentsPeriod: AgentPeriod.today.rawValue,
@@ -1887,6 +1896,7 @@ enum Defaults {
         DefaultsKey.screenOCRDetectQRCodes: true,
         DefaultsKey.micMuteShortcutEnabled: false,
         DefaultsKey.micMuteShortcut: GlobalShortcut.micMuteDefault.storageValue,
+        DefaultsKey.micMuteFollowCallApps: false,
         DefaultsKey.quitAppsShortcutEnabled: false,
         DefaultsKey.quitAppsShortcut: GlobalShortcut.quitAllDefault.storageValue,
         DefaultsKey.quitAppsExceptFrontShortcutEnabled: false,
@@ -2101,6 +2111,7 @@ enum Defaults {
         migrateAppVolumesToPositions(in: defaults)
         migrateSwitcherWindowlessFinder(in: defaults)
         recheckBrightnessDDCWriteOnlyPaths(in: defaults)
+        recheckBrightnessDDCHDMIConverterPaths(in: defaults)
         hideScratchpadControlOnce(in: defaults)
         hideKeyboardLightControlOnce(in: defaults)
         // The "all apps" output choice now lasts one session; a saved one
@@ -2231,6 +2242,16 @@ enum Defaults {
         }
         defaults.set(true, forKey: DefaultsKey.brightnessDDCWriteOnlyPathsRechecked)
         defaults.set(true, forKey: DefaultsKey.brightnessDDCReadChecksumRechecked)
+        defaults.removeObject(forKey: DefaultsKey.brightnessDDCWriteOnlyPaths)
+    }
+
+    /// A monitor behind an MCDP29XX HDMI converter was probed at the
+    /// standard DDC address, which the converter accepts and drops, so it was
+    /// cached as write-only and pinned to writes that never arrive. Drop the cache once so it is probed at the converter's address;
+    /// later verdicts stand.
+    static func recheckBrightnessDDCHDMIConverterPaths(in defaults: UserDefaults) {
+        guard !defaults.bool(forKey: DefaultsKey.brightnessDDCHDMIConverterRechecked) else { return }
+        defaults.set(true, forKey: DefaultsKey.brightnessDDCHDMIConverterRechecked)
         defaults.removeObject(forKey: DefaultsKey.brightnessDDCWriteOnlyPaths)
     }
 
@@ -2546,6 +2567,10 @@ enum Defaults {
 
     static func sanitizedBatteryLimit(_ percent: Int) -> Int {
         allowedBatteryLimits.contains(percent) ? percent : 10
+    }
+
+    static func sanitizedKeepAwakePowerDisconnectDelay(_ seconds: Int) -> Int {
+        allowedKeepAwakePowerDisconnectDelays.contains(seconds) ? seconds : 0
     }
 
     static func sanitizedKeepAwakeMouseJiggleInterval(_ minutes: Int) -> Int {

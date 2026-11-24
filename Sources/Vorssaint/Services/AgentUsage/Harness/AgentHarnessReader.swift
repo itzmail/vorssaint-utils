@@ -27,6 +27,7 @@ extension AgentProvider {
         case .codex: CodexReader()
         case .opencode: OpenCodeReader()
         case .copilot: CopilotReader()
+        case .cursor: CursorReader()
         case .commandcode: CommandCodeReader()
         case .antigravity: AccountOnlyReader(provider: self)
         }
