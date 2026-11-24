@@ -36,7 +36,7 @@ final class MoleService: ObservableObject {
     @Published private(set) var progress: MoleProgress?
     @Published private(set) var results: [MoleCommand: MoleResult] = [:]
 
-    private let queue = DispatchQueue(label: "Vorssaint.Mole", qos: .utility)
+    private let queue = DispatchQueue(label: "Solvane.Mole", qos: .utility)
 
     private init() {
         executable = MoleSupport.executable()

@@ -5,10 +5,21 @@ import Foundation
 
 /// Static identity of the app, shared by UI, notifications and tooling.
 enum AppInfo {
-    static let name = "Vorssaint"
-    static let copyright = "© 2026 Vorssaint"
-    static let websiteURL = URL(string: "https://vorssaint.com")!
-    static let repositoryURL = URL(string: "https://github.com/vorssaint/vorssaint-utils")!
+    static let name = "Solvane"
+    static let copyright = "© 2026 itzmail. Based on Vorssaint, © 2026 Vorssaint, GPL-3.0. Not an official Vorssaint release."
+    static let websiteURL = URL(string: "https://github.com/itzmail/vorssaint-utils")!
+    static let repositoryURL = URL(string: "https://github.com/itzmail/vorssaint-utils")!
+    /// True in this fork. It is not an official Vorssaint release, so the in-app
+    /// updater (which only trusts the maintainer's signing identity) stays off
+    /// and updates come through the Homebrew tap instead.
+    static let isForkBuild = true
+    static var updatesAreDisabled: Bool { isDeveloperBuild || isForkBuild }
+    /// Link sharing and feedback ran on the maintainer's servers. A fork must
+    /// not use them, so this reserved host (RFC 6761) never resolves and
+    /// nothing leaves the Mac until a server of the fork's own replaces it.
+    static let sharingEndpoint = URL(string: "https://sharing.invalid")!
+    /// The project this fork is built from. Shown in About as required credit.
+    static let upstreamURL = URL(string: "https://github.com/vorssaint/vorssaint-utils")!
     static let coffeeURL = URL(string: "https://buymeacoffee.com/vorssaint")!
     static let discordURL = URL(string: "https://discord.gg/M6BwWH4BJp")!
     static let socialURL = URL(string: "https://x.com/vorssaint")!

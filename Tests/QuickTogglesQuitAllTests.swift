@@ -13,7 +13,7 @@ enum QuickTogglesQuitAllTests {
         suite.expect(
             QuickTogglesSupport.sanitizedQuitAllExceptions([
                 "  com.apple.Safari  ", "com.apple.Safari", finder, "",
-                "com.vorssaint.utils", "com.example.Keep", "com.vorssaint.utils.dev",
+                "com.itzmail.solvane", "com.example.Keep", "com.itzmail.solvane.dev",
             ]) == [finder, phone, "com.apple.Safari", "com.example.Keep"],
             "quit-all exceptions lead with Finder and Phone, trim, dedupe and drop Vorssaint ids")
 
@@ -49,7 +49,7 @@ enum QuickTogglesQuitAllTests {
         }
         let candidates = [
             app(10, "com.apple.TextEdit"), app(11, "com.apple.Safari"), app(12, "com.apple.Notes"),
-            app(13, finder), app(14, "com.example.Agent", policy: 1), app(15, "com.vorssaint.utils"),
+            app(13, finder), app(14, "com.example.Agent", policy: 1), app(15, "com.itzmail.solvane"),
         ]
         func targets(keeping pid: Int32?) -> [Int32] {
             QuickTogglesSupport.batchQuitTargets(candidates, exceptions: exceptions, keepingPID: pid)

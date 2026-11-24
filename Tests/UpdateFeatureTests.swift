@@ -2237,5 +2237,20 @@ enum UpdateFeatureTests {
                 .contains(.appUpdates),
                "with the schedule off, app updates need no notification permission")
 
+        // Fork identity: this build is not an official release, so it must not
+        // update from the upstream feed, must not call the maintainer's servers,
+        // and must credit the project it is based on.
+        suite.expect(AppInfo.isForkBuild && AppInfo.updatesAreDisabled,
+               "the fork build never runs the in-app updater")
+        suite.expect(AppInfo.upstreamURL.absoluteString == "https://github.com/vorssaint/vorssaint-utils"
+                && AppInfo.repositoryURL.absoluteString != AppInfo.upstreamURL.absoluteString,
+               "About links the original project next to the fork")
+        suite.expect(AppInfo.copyright.contains("Based on Vorssaint")
+                && AppInfo.copyright.contains("Not an official Vorssaint release"),
+               "the copyright line credits the original and disclaims official status")
+        suite.expect(ScreenshotSharingSupport.productionEndpoint == AppInfo.sharingEndpoint
+                && RecordingSharingSupport.productionEndpoint == AppInfo.sharingEndpoint
+                && !(AppInfo.sharingEndpoint.host ?? "").hasSuffix("vorssaint.com"),
+               "the fork never sends links or feedback to the maintainer's servers")
     }
 }

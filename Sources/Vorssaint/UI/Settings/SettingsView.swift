@@ -788,6 +788,7 @@ struct AboutSettings: View {
                     appDelegate()?.showUpdateHighlights(isReview: true)
                 }
                 Link(l10n.s.viewOnGitHub, destination: AppInfo.repositoryURL)
+                Link("Original Vorssaint", destination: AppInfo.upstreamURL)
             }
             Text(AppInfo.copyright)
                 .font(.caption2)
