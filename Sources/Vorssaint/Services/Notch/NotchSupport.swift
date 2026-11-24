@@ -827,7 +827,7 @@ enum NotchMusicStripLayout {
 }
 
 enum NotchCompactActivity: String, Identifiable {
-    case timer, watch, downloads, agents, calendar, music, keepAwake, prayer
+    case timer, watch, downloads, agents, calendar, music, keepAwake, prayer, mole
 
     var id: String { rawValue }
 
@@ -841,6 +841,7 @@ enum NotchCompactActivity: String, Identifiable {
         case .music: return FeatureStrings.notch(language).music
         case .keepAwake: return Strings.localized(language).keepAwakeTitle
         case .prayer: return FeatureStrings.prayer(language).title
+        case .mole: return "Mole"
         }
     }
 
@@ -855,6 +856,7 @@ enum NotchCompactActivity: String, Identifiable {
         case .music: return .music
         case .keepAwake: return .controls
         case .prayer: return .prayer
+        case .mole: return .controls
         }
     }
 
@@ -862,6 +864,7 @@ enum NotchCompactActivity: String, Identifiable {
         switch self {
         case .keepAwake: return NotchControlItem.keepAwake.symbol
         case .prayer: return NotchPrayerSupport.symbol
+        case .mole: return NotchMoleSupport.symbol
         default: return module.symbol
         }
     }
@@ -1171,6 +1174,14 @@ enum NotchCapsuleLayout {
         let right = reading.map { width(NotchAgentSupport.readingShape($0), font: readingFont) }
             ?? NotchKeepAwakeSupport.symbolWidth(NotchKeepAwakeSupport.openSymbol, size: readingFont.pointSize) + air
         return surface(content: cup + spacing + right, maximum: Maximum.activity, geometry: geometry)
+    }
+
+    /// Mole at work: its box, wider than other marks, and the size found so
+    /// far measured by its shape.
+    static func moleSurface(reading: String, geometry: NotchGeometry) -> CGSize {
+        let box = NotchKeepAwakeSupport.symbolWidth(NotchMoleSupport.symbol, size: symbolSize)
+        return surface(content: box + spacing + width(NotchAgentSupport.readingShape(reading), font: readingFont),
+                       maximum: Maximum.activity, geometry: geometry)
     }
 
     /// The minutes before a prayer: the moon, wider than other marks, and the
@@ -1820,9 +1831,9 @@ enum NotchSupport {
     /// follows the timer: the person started both and is waiting on them.
     static func compactActivities(timer: Bool, watch: Bool = false, downloads: Bool, agents: Bool,
                                   calendar: Bool, music: Bool, keepAwake: Bool = false,
-                                  prayer: Bool = false) -> [NotchCompactActivity] {
+                                  prayer: Bool = false, mole: Bool = false) -> [NotchCompactActivity] {
         let candidates: [(Bool, NotchCompactActivity)] = [
-            (timer, .timer), (watch, .watch), (downloads, .downloads), (agents, .agents),
+            (timer, .timer), (mole, .mole), (watch, .watch), (downloads, .downloads), (agents, .agents),
             (calendar, .calendar), (prayer, .prayer), (music, .music), (keepAwake, .keepAwake)
         ]
         return candidates.compactMap { $0.0 ? $0.1 : nil }

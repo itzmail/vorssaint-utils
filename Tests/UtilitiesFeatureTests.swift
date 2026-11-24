@@ -114,6 +114,8 @@ enum UtilitiesFeatureTests {
         }
         suite.expect(Defaults.registeredDefaults[DefaultsKey.panelUtilityPortManager] as? Bool == true,
                "the port manager panel row ships visible like its siblings and travels in backups")
+        suite.expect(Defaults.registeredDefaults[DefaultsKey.panelUtilityMole] as? Bool == true,
+               "the Mole panel row ships visible like its siblings and travels in backups")
 
         // MARK: Port manager row numbers
 

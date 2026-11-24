@@ -1,0 +1,6 @@
+○ DRY RUN MODE, No installer files will be removed
+
+✓ No installer files to clean
+
+✓ No installer files to clean
+

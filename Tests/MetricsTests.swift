@@ -141,6 +141,7 @@ struct MetricsTests {
             ("agent-turns", { AgentTurnTests.run(suite) }),
             ("antigravity-usage", { AntigravityUsageTests.run(suite) }),
             ("commandcode-usage", { CommandCodeUsageTests.run(suite) }),
+            ("mole", { MoleSupportTests.run(suite) }),
             ("prayer", {
                 PrayerEngineTests.run(suite)
                 PrayerServiceTests.run(suite)

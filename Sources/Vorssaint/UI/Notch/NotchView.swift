@@ -240,6 +240,7 @@ struct NotchView: View {
             case .calendar: NotchCapsuleCalendarStrip(service: service, size: size)
             case .music: NotchCapsuleMusicStrip(service: service, size: size, interactive: true)
             case .keepAwake: NotchCapsuleKeepAwakeStrip(service: service, size: size)
+            case .mole: NotchCapsuleMoleStrip(service: service, size: size)
             case .prayer: NotchCapsulePrayerStrip(service: service, size: size)
             }
         } else {
@@ -255,6 +256,7 @@ struct NotchView: View {
             case .calendar: NotchCalendarStrip(service: service, displayGeometry: geometry)
             case .music: NotchMusicStrip(service: service, displayGeometry: geometry, interactive: true)
             case .keepAwake: NotchKeepAwakeStrip(service: service, displayGeometry: geometry)
+            case .mole: NotchMoleStrip(service: service, displayGeometry: geometry)
             case .prayer: NotchPrayerStrip(service: service, displayGeometry: geometry)
             }
         }

@@ -429,7 +429,7 @@ private struct NotchCapsuleCompanionMark: View {
                     NotchCapsuleCalendarStrip.clockMark(countdown, now: context.date)
                 }
             }
-        case .timer, .keepAwake, .watch, .prayer:
+        case .timer, .keepAwake, .watch, .prayer, .mole:
             EmptyView()
         }
     }
@@ -776,5 +776,40 @@ struct NotchCapsuleCaptureStrip: View {
             }
         }
         .accessibilityHidden(true)
+    }
+}
+
+/// The same activity on a display without a camera housing, as a capsule.
+struct NotchCapsuleMoleStrip: View {
+    @ObservedObject var service: NotchService
+    let size: CGSize
+    /// Another display's capsule, when the island shows on every display.
+    var displayGeometry: NotchGeometry? = nil
+    @ObservedObject private var mole = MoleService.shared
+
+    var body: some View {
+        NotchStripHold(NotchMoleSupport.reading(mole.progress), shows: mole.busy != nil) { row(reading: $0) }
+    }
+
+    private func row(reading: String) -> some View {
+        NotchCapsuleRow(size: size, geometry: displayGeometry ?? service.geometry) {
+            HStack(spacing: CapsuleLayout.spacing) {
+                Image(systemName: NotchMoleSupport.symbol)
+                    .font(.system(size: CapsuleLayout.symbolSize, weight: .medium))
+                    .foregroundStyle(.teal)
+                    .capsuleCentred(NotchMoleSupport.symbol)
+                Text(reading)
+                    .font(Font(CapsuleLayout.readingFont as CTFont))
+                    .foregroundStyle(.teal)
+                    .lineLimit(1).fixedSize()
+                    .onChange(of: NotchAgentSupport.readingShape(reading)) { _, _ in
+                        DispatchQueue.main.async { service.refreshPresentation() }
+                    }
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Mole")
+        .accessibilityValue(reading)
+        .accessibilityIdentifier("notch.mole")
     }
 }

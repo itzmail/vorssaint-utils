@@ -304,6 +304,7 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Prayer/PrayerSupport.swift
         Sources/Vorssaint/Services/Notch/NotchPrayerSupport.swift
         Sources/Vorssaint/Core/PrayerStrings.swift
+        Sources/Vorssaint/Services/Mole/MoleSupport.swift
         Sources/Vorssaint/Core/NotchLockScreenStrings.swift
         Sources/Vorssaint/Services/Notch/NotchLockScreenSupport.swift
         Sources/Vorssaint/Services/AgentUsage/AgentUsageModels.swift
@@ -339,6 +340,7 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Notch/NotchNotificationReaderCore.swift
         Sources/Vorssaint/Services/Notch/NotchCalendarSupport.swift
         Sources/Vorssaint/Services/Notch/NotchKeepAwakeSupport.swift
+        Sources/Vorssaint/Services/Notch/NotchMoleSupport.swift
         Sources/Vorssaint/Services/Notch/NotchSupport.swift
         Sources/Vorssaint/Services/Notch/NotchAudioLevelSupport.swift
         Sources/Vorssaint/Services/Notch/NotchVolumeKeyGate.swift

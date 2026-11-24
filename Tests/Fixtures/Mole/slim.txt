@@ -1,0 +1,22 @@
+○ DRY RUN MODE, No apps will be changed
+
+  Claude               234.0MB
+  Visual Studio Code   187.3MB
+  WordCraft            141.1MB
+  Craft Anything       137.6MB
+  PdfCraft             136.2MB
+  DeckCraft            121.0MB
+  yab                   91.9MB
+  GridCraft             91.6MB
+  Mouseless             44.8MB
+  AnyDesk               26.0MB
+  ArtCraft Launcher     25.2MB
+  Ghostty               24.5MB
+  Burrow                20.7MB
+  Herd                   1.4MB
+  Ghostex                1.1MB
+  Android Studio         866KB
+  Llama                  459KB
+  Mounty                 218KB
+
+18 apps, 1.29GB of Intel code

@@ -1,0 +1,102 @@
+
+Clean Your Mac
+
+Dry Run Mode, Preview only, no deletions
+
+◎ System caches need sudo, run sudo -v && mo clean --dry-run for full preview
+
+⚙ Apple Silicon | Free space: 473.45GB
+⚙ Whitelist: 25 core patterns active
+
+➤ User essentials
+  ○ User app cache · 19 items, 1.83GB dry
+  ○ User app logs · 13 items, 45KB dry
+  ◎ Trash · skipped, grant Full Disk Access to your terminal
+  ◎ Mail Downloads · skipped (sizing unavailable)
+
+➤ App caches
+  ○ macOS Help system cache · 5 items, 25.7MB dry
+  ○ Maps geo tile cache · 6 items, 52.8MB dry
+  ○ Apple Media Services cache · 5 items, 2.1MB dry
+  ○ Parsecd cache · 15 items, 17.1MB dry
+  ○ Apple Python cache · 2 items, 7.6MB dry
+
+➤ Browsers
+  ✓ Nothing to clean
+
+➤ Cloud & Office
+  ✓ Nothing to clean
+
+➤ Developer tools
+  ○ npm cache · would clean
+  ○ npm cache directory · 3 items, 555.3MB dry
+  ○ npm logs · 12 items, 53KB dry
+  ○ pnpm cache · would clean
+  ○ pnpm cache · would clean
+  ○ Bun cache · 575 items, 345.9MB dry
+  ○ pip cache · would clean
+  ○ uv cache · would clean
+  ○ mise cache · would clean
+  ○ Docker build cache and dangling images · would prune, build cache unused for 7 days
+  ○ GitHub CLI cache · would clean
+  ○ Next.js build cache · 2 items, 1.14GB dry
+  ◎ Project caches · skipped 1 slow/incomplete root scan
+  ⊙ Android NDK versions · 5 · 23.1.7779620, 26.1.10909125, 27.0.12077973 and 28.2.13676358 besides 29.0.14206865 · ~/Library/Android/sdk/ndk
+  ○ Clang module cache · 571.2MB dry
+  ○ Sentry crash reports · 2 items, 8KB dry
+  ◎ Codex daemon old releases · skipped (open-file check unavailable)
+  ○ CoreSimulator logs · 8KB dry
+  ○ VS Code logs · 291KB dry
+  ○ VS Code cache · 2 items, 864KB dry
+  ○ VS Code extension cache · 6 items, 191.8MB dry
+  ○ VS Code data cache · 12.1MB dry
+  ○ Obsolete VS Code extension · 334.5MB dry
+  ○ Obsolete VS Code extension · 19.6MB dry
+  ○ Obsolete VS Code extension · 20.3MB dry
+  ○ Obsolete VS Code extension · 17.4MB dry
+  ○ Obsolete VS Code extension · 28.4MB dry
+  ○ Obsolete VS Code extension · 1.1MB dry
+  ⊙ Homebrew unused dependencies · lima · remove with brew autoremove
+
+➤ Apps & utilities
+  ○ Zsh completion cache · 53KB dry
+
+➤ Virtualization
+  ✓ Nothing to clean
+
+➤ Application Support
+  ○ Application Support logs/caches · 21.6MB dry
+
+➤ App leftovers
+  ✓ Nothing to clean
+
+➤ Apple Silicon updates
+  ✓ Nothing to clean
+
+➤ Device backups & firmware
+  ✓ Nothing to clean
+
+➤ Time Machine
+  ✓ Nothing to clean
+
+➤ Large files
+  ⊙ Simulator data · 2.76GB · 33 simulators · ~/Library/Developer/CoreSimulator/Devices
+  ⊙ Colima VM data · 29.28GB · ~/.colima/_lima
+  ⊙ pnpm store · 2.32GB · v3 and v11 stores · ~/Library/pnpm/store
+  ⊙ Gradle caches · 15.05GB · ~/.gradle/caches
+  ⊙ Android emulators · 21.59GB · 2026-10-12 · ~/.android/avd
+  ⊙ Android system images · 8.35GB · ~/Library/Android/sdk/system-images
+  ⊙ Hugging Face cache · 27.99GB · ~/.cache/huggingface
+  ⊙ mise node installs · 2.53GB · ~/.local/share/mise/installs/node
+  ⊙ FVM Flutter SDKs · 2.65GB · ~/fvm/versions
+
+➤ Project artifacts
+  ✓ Nothing to clean
+
+
+======================================================================
+Dry run complete - no changes made
+Potential space: 5.13GB · 705 items
+Detailed file list: /Users/user/.config/mole/clean-list.txt
+======================================================================
+

@@ -560,6 +560,10 @@ final class NotchService: ObservableObject {
         NotchPrayerSupport.showsActivity() && PrayerService.shared.countdown != nil
     }
 
+    var hasMoleActivity: Bool {
+        NotchMoleSupport.showsActivity() && MoleService.shared.busy != nil
+    }
+
     var hasKeepAwakeActivity: Bool {
         NotchKeepAwakeSupport.showsActivity() && KeepAwakeManager.shared.isActive
     }
@@ -573,7 +577,7 @@ final class NotchService: ObservableObject {
         NotchSupport.compactActivities(timer: hasTimerActivity, watch: hasWatchActivity, downloads: hasDownloadActivity,
                                       agents: hasAgentActivity, calendar: hasCalendarActivity,
                                       music: hasMusicActivity, keepAwake: hasKeepAwakeActivity,
-                                      prayer: hasPrayerActivity)
+                                      prayer: hasPrayerActivity, mole: hasMoleActivity)
     }
 
     var showsCompactActivityPicker: Bool {
@@ -701,6 +705,7 @@ final class NotchService: ObservableObject {
         case .keepAwake: return geometry.compactTimerGeometry(showsDownloads: false, wing: keepAwakeStripWing(in: geometry))
         // The minutes left are a reading like the timer's, so it takes the timer's wings.
         case .prayer: return geometry.compactTimerGeometry(showsDownloads: false, wing: prayerStripWing(in: geometry))
+        case .mole: return geometry.compactTimerGeometry(showsDownloads: false, wing: moleStripWing(in: geometry))
         default: return geometry
         }
     }
@@ -722,6 +727,10 @@ final class NotchService: ObservableObject {
     private func prayerStripWing(in geometry: NotchGeometry) -> CGFloat {
         NotchPrayerSupport.stripWing(minutes: PrayerService.shared.countdown?.minutes ?? 1,
                                      locale: Locale(identifier: L10n.shared.language.rawValue), in: geometry)
+    }
+
+    private func moleStripWing(in geometry: NotchGeometry) -> CGFloat {
+        NotchMoleSupport.stripWing(reading: NotchMoleSupport.reading(MoleService.shared.progress), in: geometry)
     }
 
     private func keepAwakeStripWing(in geometry: NotchGeometry) -> CGFloat {
@@ -1131,6 +1140,8 @@ final class NotchService: ObservableObject {
             let reading = NotchPrayerSupport.compactText(minutes: countdown.minutes,
                                                          locale: Locale(identifier: language.rawValue))
             return layout.prayerSurface(reading: reading, geometry: geometry)
+        case .mole:
+            return layout.moleSurface(reading: NotchMoleSupport.reading(MoleService.shared.progress), geometry: geometry)
         }
     }
 
@@ -4323,6 +4334,20 @@ final class NotchService: ObservableObject {
         if NotchPrayerSupport.showsActivity() {
             // The minutes left change the reading, and the wings it needs.
             PrayerService.shared.$countdown.removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    self?.syncMenuSpaceMonitoring()
+                    self?.objectWillChange.send()
+                    self?.refreshPresentation()
+                }.store(in: &subscriptions)
+        }
+        if NotchMoleSupport.showsActivity() {
+            // A run starting or ending, or the size found so far growing,
+            // which changes the reading and the wings it needs.
+            let mole = MoleService.shared
+            mole.$progress.map { NotchMoleSupport.reading($0) }
+                .combineLatest(mole.$busy.map { $0 != nil })
+                .removeDuplicates { $0 == $1 }
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     self?.syncMenuSpaceMonitoring()

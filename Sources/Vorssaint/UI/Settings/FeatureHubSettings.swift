@@ -1210,6 +1210,7 @@ extension AppFeature {
         case .killProcess: return FeatureStrings.killProcess(language).pageTitle
         case .portManager: return FeatureStrings.portManager(language).title
         case .prayer: return FeatureStrings.prayer(language).title
+        case .mole: return "Mole"
         case .homebrew: return s.homebrewName
         case .appUpdates: return FeatureStrings.appUpdates(language).pageTitle
         case .monitorCPU: return s.monitorShowCPU
@@ -1304,6 +1305,7 @@ extension AppFeature {
         case .killProcess: return FeatureStrings.killProcess(L10n.shared.language).hubDescription
         case .portManager: return FeatureStrings.portManager(L10n.shared.language).hubDescription
         case .prayer: return FeatureStrings.prayer(L10n.shared.language).description
+        case .mole: return "Runs the Mole command line cleaner: caches, old build folders, installers, Intel code and system upkeep."
         case .homebrew: return hub.descHomebrew
         case .appUpdates: return FeatureStrings.appUpdates(L10n.shared.language).hubDescription
         case .monitorCPU: return hub.descMonitorCPU

@@ -1,0 +1,75 @@
+
+Optimize
+○ DRY RUN MODE, No files will be modified
+
+⚙ System  10/16 GB RAM | 462/926 GB Disk | Uptime 0d
+
+Performance diagnosis
+  ✓ No sustained high-CPU bottleneck detected
+
+➤ Finder Cache Refresh
+  ○ QuickLook thumbnails refreshed
+  ○ Icon services cache rebuilt
+
+➤ App State Cleanup
+  ○ App saved states optimized
+
+➤ Broken Config Repair
+  ○ All preference files valid
+
+➤ Network Cache Refresh
+  ○ DNS cache refreshed
+
+➤ Database Optimization
+  ○ No databases found to optimize
+
+➤ Prevent Finder .DS_Store
+  ○ .DS_Store prevention already enabled on network & USB volumes
+
+➤ Legacy Overrides
+  ○ No legacy App Nap or disk-image overrides found
+
+➤ Network Stack Refresh
+  ○ Network stack already optimal
+
+➤ Permission Repair
+  ○ User directory permissions already optimal
+
+➤ Spotlight Optimization
+  ○ Spotlight index already optimal
+
+➤ Spotlight Orphan Rules
+  ○ Spotlight search rules already clean
+
+➤ Periodic Maintenance
+  ○ Periodic maintenance skipped (not available on this macOS version)
+
+➤ Shared File Lists
+  - Shared file lists not readable (check directory permissions and Full Disk Access)
+
+➤ Disk Health
+  ○ Disk verify skipped
+
+➤ Login Items
+  ◎ Broken login item: Mos (app not found)
+  ◎ 1 broken login item(s) · remove via System Settings > General > Login Items
+
+➤ Quarantine Database Cleanup
+  ○ Quarantine database already clean
+
+➤ Launch Agents Cleanup
+  ○ Launch Agents all healthy
+
+➤ Notifications
+  ○ Notification Center database is healthy (1.3MB)
+
+➤ Usage Data
+  ○ Knowledge database is healthy (41.6MB)
+
+======================================================================
+Dry Run Complete, No Changes Made
+Would apply 2 optimizations
+12 unchanged | 2 skipped | 2 unavailable | 1 need attention
+Run without --dry-run to apply these changes
+======================================================================
+
