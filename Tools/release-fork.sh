@@ -33,7 +33,7 @@ fi
 echo "▸ Building Solvane $TAG"
 ./build.sh
 codesign --verify --deep --strict build/stage/Solvane.app
-codesign -dv build/stage/Solvane.app 2>&1 | grep -q 'Authority=Solvane Signing' \
+codesign -dvv build/stage/Solvane.app 2>&1 | grep -q 'Authority=Solvane Signing' \
     || { echo "✗ not signed with the Solvane Signing identity; run Tools/setup-signing.sh" >&2; exit 1; }
 build/stage/Solvane.app/Contents/MacOS/Solvane --selftest | tail -1
 
