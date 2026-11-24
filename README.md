@@ -1,77 +1,50 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/logo-dark.svg">
-    <img src="docs/assets/readme/logo.svg" width="220" alt="Vorssaint logo">
-  </picture>
+  <img src="docs/assets/readme/solvane-icon.png" width="160" alt="Solvane icon">
 </p>
 
-<h1 align="center">Vorssaint</h1>
+<h1 align="center">Solvane</h1>
 
 <p align="center">
   One menu bar icon doing the job of a dozen paid Mac apps.<br>
-  Install only what you use.
+  An unofficial fork of <a href="https://github.com/vorssaint/vorssaint-utils">Vorssaint</a>, with a few extra features.
 </p>
 
 <p align="center">
-  <a href="https://vorssaint.com">Website</a> ·
   <a href="#install">Install</a> ·
+  <a href="#how-this-differs-from-vorssaint">What's different</a> ·
   <a href="#everything-it-does">Features</a> ·
   <a href="#private-by-default">Privacy</a> ·
-  <a href="CHANGELOG.md">Changelog</a> ·
-  <a href="mailto:hello@vorssaint.com">Contact</a> ·
-  <a href="https://discord.gg/M6BwWH4BJp">Discord</a>
+  <a href="MODIFICATIONS.md">Modifications</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/vorssaint/vorssaint-utils/releases"><img src="https://img.shields.io/github/v/release/vorssaint/vorssaint-utils?label=release&color=4c8dff" alt="Latest release"></a>
-  <a href="https://github.com/vorssaint/vorssaint-utils/releases"><img src="https://img.shields.io/github/downloads/vorssaint/vorssaint-utils/total?color=4c8dff" alt="Downloads"></a>
-  <a href="https://github.com/vorssaint/vorssaint-utils/actions/workflows/ci.yml"><img src="https://github.com/vorssaint/vorssaint-utils/actions/workflows/ci.yml/badge.svg?branch=main&event=push" alt="CI status"></a>
-  <a href="#what-you-need"><img src="https://img.shields.io/badge/macOS-14%2B%20Apple%20Silicon-black" alt="macOS 14 and newer, Apple Silicon"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="License GPL 3.0 or later"></a>
+  <a href="#what-you-need"><img src="https://img.shields.io/badge/macOS-14%2B%20Apple%20Silicon-black" alt="macOS 14 and newer, Apple Silicon"></a>
 </p>
 
-<p align="center">
-  <a href="https://buymeacoffee.com/vorssaint">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="217" height="60" alt="Buy Me a Coffee">
-  </a>
-</p>
-
-<p align="center">
-  For anything private, email
-  <a href="mailto:hello@vorssaint.com"><strong>hello@vorssaint.com</strong></a>.
-</p>
-
-<p align="center">
-  <a href="https://trendshift.io/repositories/53716?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-53716" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/53716" alt="vorssaint/vorssaint-utils | Trendshift" width="250" height="55"></a>
-  <a href="https://trendshift.io/repositories/53716?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-53716" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/53716/weekly?language=Swift" alt="vorssaint/vorssaint-utils | Trendshift weekly ranking" width="250" height="55"></a>
-  <a href="https://trendshift.io/repositories/53716?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-53716" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/53716/monthly?language=Swift" alt="vorssaint/vorssaint-utils | Trendshift monthly ranking" width="250" height="55"></a>
-</p>
-
-<h2 align="center">Sponsors</h2>
-
-<p align="center">
-  Help keep Vorssaint free and open source. Share your product with Mac users.
-</p>
-
-<table align="center">
-  <tr>
-    <td align="center" width="520">
-      <br>
-      <strong>Your product here</strong><br>
-      <sub>Your logo · Your name · Your link</sub><br><br>
-      <a href="SPONSORS.md"><strong>Become our first sponsor →</strong></a><br><br>
-    </td>
-  </tr>
-</table>
-
-<p align="center">
-  <img src="docs/assets/readme/panel-mixer.png" width="196" alt="Volume mixer with per app sliders, one app boosted past 100 percent">
-  <img src="docs/assets/readme/panel-system.png" width="196" alt="System tab with temperatures, usage graphs and memory pressure">
-  <img src="docs/assets/readme/panel-controls.png" width="196" alt="Window controls with the app switcher and Dock features">
-  <img src="docs/assets/readme/panel-utilities.png" width="196" alt="Utilities with cleaner, Homebrew, media tools and clipboard">
-</p>
+> **Solvane is not the official Vorssaint app.** It is a fork of [vorssaint/vorssaint-utils](https://github.com/vorssaint/vorssaint-utils), created and maintained by Vorssaint, and it is not affiliated with or endorsed by the original author. All credit for the app goes to the original project; this fork only adds the changes listed below. If you want the original, official, notarized app, get it from the [Vorssaint releases](https://github.com/vorssaint/vorssaint-utils/releases) or `brew install --cask vorssaint`.
 
 Per app volume, a real system monitor, a better app switcher, window snapping, Dock previews, clipboard history, text snippets, a file shelf, an uninstaller. The utilities Mac users usually buy one by one, together behind a single menu bar icon, with no account, no telemetry and no subscription.
+
+Screenshots further down come from the original project and may show its branding.
+
+## How this differs from Vorssaint
+
+**Added in Solvane**
+
+- **Mole cleanup.** Run the [Mole](https://github.com/tw93/Mole) cleaner from the menu bar, with live progress and a terminal-style log.
+- **Command Code and Antigravity usage.** Both agents appear next to the other AI coding agents in the usage panel.
+- **Prayer times.** Prayer times for Kemenag RI locations plus Makkah, Madinah and Jeddah, with an optional adhan. See [Resources/Prayer/NOTICE.txt](Resources/Prayer/NOTICE.txt) for the data and audio credits.
+
+**Changed to keep the fork separate**
+
+- New name, icon and bundle identifier (`com.itzmail.solvane`), as the original's [TRADEMARKS.md](TRADEMARKS.md) requires of forks, so Solvane installs next to Vorssaint without clashing.
+- The in-app updater is off. Update with `brew upgrade --cask solvane`.
+- Screenshot and recording share links and the feedback form are off, because they talk to the original maintainer's servers.
+- Builds are signed with a self-signed identity and are not notarized. The Homebrew cask clears the quarantine flag for you.
+- Apple Silicon only.
+
+The full list is in [MODIFICATIONS.md](MODIFICATIONS.md).
 
 ## Install only what you use
 
@@ -184,37 +157,52 @@ Reorder or hide panel sections, choose a compact layout, and export settings to 
 - **Keep awake.** Keep your Mac working on a timer, with the lid closed, or while selected apps, power or external displays are present.
 - **Displays.** Control individual displays and brightness, with hardware control where supported, half or quarter steps for the brightness keys, optional extra dimming below a monitor's minimum, software dimming as a fallback, and the volume and mute of a monitor's built-in speakers.
 - **Extra brightness.** Use a MacBook Pro XDR display's HDR headroom to go beyond its normal maximum brightness.
-- **Bluetooth on sleep.** Disconnect Bluetooth during sleep and restore it on wake only if Vorssaint turned it off.
+- **Bluetooth on sleep.** Disconnect Bluetooth during sleep and restore it on wake only if Solvane turned it off.
 
 ## Install
 
-With [Homebrew](https://brew.sh):
+### With Homebrew (recommended)
 
 ```sh
-brew install --cask vorssaint
+brew tap itzmail/solvane
+brew install --cask solvane
 ```
 
-Or grab the disk image from the [releases page](https://github.com/vorssaint/vorssaint-utils/releases) and drag Vorssaint into Applications.
+Then open Solvane from Applications or Spotlight. It lives in the menu bar and asks only for the permissions of the features you use.
 
-Builds are signed with an Apple Developer ID and notarized, so macOS opens them without a fuss and your permissions survive updates.
+Update later with:
+
+```sh
+brew upgrade --cask solvane
+```
+
+### Manual install
+
+Download the latest `Solvane-<version>.dmg` from the [releases page](https://github.com/itzmail/vorssaint-utils/releases), open it and drag Solvane into Applications.
+
+Solvane is not notarized, so macOS may say it cannot verify the app. Either right-click the app, choose Open and confirm, or clear the flag once:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Solvane.app
+```
+
+Permissions you grant stay in place across updates because builds are signed with the same identity each time.
 
 ## Uninstall
 
-With Homebrew:
-
 ```sh
-brew uninstall --cask vorssaint
+brew uninstall --cask solvane
 ```
 
-To remove Vorssaint completely, including its settings and permissions:
+To remove Solvane completely, including its settings:
 
 ```sh
-./Tools/uninstall.sh
+brew uninstall --zap --cask solvane
 ```
 
 ## Private by default
 
-Vorssaint is local-first, with no account, analytics or tracking. The network is touched only by things you can see: update checks, the speed test, Homebrew actions, optional online lyric lookup, temporary screenshot or recording links and feedback you explicitly send. The full story is in the [privacy notes](docs/PRIVACY.md).
+Solvane is local-first, with no account, analytics or tracking. The network is touched only by things you can see: the speed test, Homebrew actions and optional online lyric lookup. Update checks, share links and feedback are switched off in this fork. The full story is in the [privacy notes](docs/PRIVACY.md).
 
 Permissions get the same treatment. Every one is optional, the app explains each in plain words, shows which features actually use it, and even tells you when a permission you granted is no longer needed by anything, with a shortcut to revoke it.
 
@@ -232,13 +220,14 @@ See the [permissions guide](docs/PERMISSIONS.md) for which features need access 
 ### Build it yourself
 
 ```sh
-git clone https://github.com/vorssaint/vorssaint-utils.git
+git clone https://github.com/itzmail/vorssaint-utils.git
 cd vorssaint-utils
-./build.sh --dev            # build the separate Developer variant
-./build.sh --dev --install  # install and launch it
+git checkout release/personal
+./build.sh                  # build Solvane into build/stage
+./build.sh --install        # build, install and launch it
 ```
 
-Xcode Command Line Tools are the only requirement. The [contributing guide](CONTRIBUTING.md) covers the layout and conventions. Official builds come only from the maintainer: the GPL covers the source, while the Vorssaint name, icon and look are covered by [TRADEMARKS.md](TRADEMARKS.md), so forks need their own identity.
+Xcode Command Line Tools are the only requirement. The [contributing guide](CONTRIBUTING.md) covers the layout and conventions. The GPL covers the source, while the Vorssaint name, icon and look are covered by the original's [TRADEMARKS.md](TRADEMARKS.md), which is why this fork has its own identity.
 
 ## When something misbehaves
 
@@ -253,11 +242,9 @@ See [troubleshooting](docs/TROUBLESHOOTING.md) for launch problems, permissions 
 - [Support](SUPPORT.md), where to get help
 - [Security](SECURITY.md), how to report a vulnerability
 
-## Community
+## Credits
 
-Vorssaint went from first commit to the front of GitHub trending in three days, top of the Swift charts, and issues and pull requests have shaped every release since. Bug reports, feature ideas and translations are all welcome, starting from the [contributing guide](CONTRIBUTING.md).
-
-Vorssaint is free and will stay that way. If it earned its place in your menu bar, a star helps other people find it, and a [coffee](https://buymeacoffee.com/vorssaint) keeps the maintainer awake, with or without the Keep awake feature.
+Solvane exists because of [Vorssaint](https://github.com/vorssaint/vorssaint-utils) by the Vorssaint authors. If it earned its place in your menu bar, star and support the [original project](https://github.com/vorssaint/vorssaint-utils) first.
 
 ## Acknowledgements
 
@@ -265,8 +252,4 @@ Vorssaint is free and will stay that way. If it earned its place in your menu ba
 
 ## License
 
-[GPL 3.0 or later](LICENSE), copyright 2026 Vorssaint. The license covers the source code; the Vorssaint name, logo and look are covered separately in [TRADEMARKS.md](TRADEMARKS.md).
-
-<p align="center">
-  <sub>Made by <a href="https://x.com/vorssaint">@vorssaint</a></sub>
-</p>
+[GPL 3.0 or later](LICENSE). Copyright 2026 Vorssaint for the original code, copyright 2026 itzmail for the changes in this fork; see [MODIFICATIONS.md](MODIFICATIONS.md). The license covers the source code. The Vorssaint name, logo and look belong to the original project and are not used by this fork.
