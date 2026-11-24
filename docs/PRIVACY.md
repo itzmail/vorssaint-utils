@@ -1,5 +1,7 @@
 # Privacy
 
+> **Solvane fork notice.** This document comes from the original Vorssaint project and still describes its behavior in places. In Solvane, the connections below for the update check (1), temporary screenshot links (5), temporary recording links (6) and feedback (7) are **switched off**: the app never contacts the original maintainer's servers for them. Wherever the text says Vorssaint, read Solvane. The other items (speed test, Homebrew actions, app updates catalog, lyrics, AI price list and so on) behave as described, and the AI price list is still fetched from the original repository's public GitHub file.
+
 Vorssaint is built to be local-first. Core features run on your Mac, and the app has no Vorssaint account or cloud dashboard. Its Vorssaint-operated services are limited to temporary screenshot and recording links and feedback you explicitly choose to send.
 
 ## The short version
