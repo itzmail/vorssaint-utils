@@ -2252,5 +2252,9 @@ enum UpdateFeatureTests {
                 && RecordingSharingSupport.productionEndpoint == AppInfo.sharingEndpoint
                 && !(AppInfo.sharingEndpoint.host ?? "").hasSuffix("vorssaint.com"),
                "the fork never sends links or feedback to the maintainer's servers")
+    suite.expect(!FanControlIdentifiers.appCodeRequirement.contains("3D485NHW29")
+            && !FanControlIdentifiers.helperCodeRequirement.contains("3D485NHW29")
+            && FanControlIdentifiers.appCodeRequirement.contains("certificate leaf"),
+           "fan control pins this fork's own signing certificate, never the upstream Team ID")
     }
 }

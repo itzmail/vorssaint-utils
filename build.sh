@@ -402,6 +402,7 @@ if (( TEST )); then
         Sources/Vorssaint/Core/ConnectedDevicesStrings.swift
         Sources/Vorssaint/Services/FanControl/FanControlSupport.swift
         Sources/Vorssaint/Services/FanControl/FanControlResumeSupport.swift
+        Sources/Vorssaint/Services/FanControl/FanControlXPC.swift
         Sources/Vorssaint/Services/Snippets/TextSnippetSupport.swift
         Sources/Vorssaint/Services/RadialMenu/RadialMenuSupport.swift
         Sources/Vorssaint/Services/QuickTools/ScratchpadSupport.swift

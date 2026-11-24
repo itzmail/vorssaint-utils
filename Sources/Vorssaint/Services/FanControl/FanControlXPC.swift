@@ -2,14 +2,10 @@
 // Copyright (C) 2026 Vorssaint
 
 import Foundation
-#if VORSSAINT_DEVELOPMENT
 import Security
 import CryptoKit
-#endif
 
 enum FanControlIdentifiers {
-    static let teamID = "3D485NHW29"
-
     #if VORSSAINT_DEVELOPMENT
     static let appBundleID = "com.itzmail.solvane.dev"
     #else
@@ -19,29 +15,19 @@ enum FanControlIdentifiers {
     static let helperID = "\(appBundleID).fan-control"
     static let plistName = "\(helperID).plist"
 
+    // The upstream release pins its Apple Developer Team ID here. This fork is
+    // self-signed, so both ends pin the leaf certificate it was signed with:
+    // an app and helper from any other signer fail the connection.
     static var appCodeRequirement: String {
-        #if VORSSAINT_DEVELOPMENT
-        guard let hash = self.currentLeafCertificateSHA1() else {
-            return "identifier \"\(appBundleID)\" and certificate leaf = H\"0000000000000000000000000000000000000000\""
-        }
-        return "identifier \"\(appBundleID)\" and certificate leaf = H\"\(hash)\""
-        #else
-        return "anchor apple generic and certificate leaf[subject.OU] = \"\(teamID)\" and identifier \"\(appBundleID)\""
-        #endif
+        "identifier \"\(appBundleID)\" and certificate leaf = H\"\(currentLeafCertificateSHA1() ?? zeroHash)\""
     }
 
     static var helperCodeRequirement: String {
-        #if VORSSAINT_DEVELOPMENT
-        guard let hash = self.currentLeafCertificateSHA1() else {
-            return "identifier \"\(helperID)\" and certificate leaf = H\"0000000000000000000000000000000000000000\""
-        }
-        return "identifier \"\(helperID)\" and certificate leaf = H\"\(hash)\""
-        #else
-        return "anchor apple generic and certificate leaf[subject.OU] = \"\(teamID)\" and identifier \"\(helperID)\""
-        #endif
+        "identifier \"\(helperID)\" and certificate leaf = H\"\(currentLeafCertificateSHA1() ?? zeroHash)\""
     }
 
-    #if VORSSAINT_DEVELOPMENT
+    private static let zeroHash = String(repeating: "0", count: 40)
+
     private static func currentLeafCertificateSHA1() -> String? {
         var dynamicCode: SecCode?
         guard SecCodeCopySelf([], &dynamicCode) == errSecSuccess,
@@ -70,7 +56,6 @@ enum FanControlIdentifiers {
         let digest = Insecure.SHA1.hash(data: data)
         return digest.map { String(format: "%02x", $0) }.joined()
     }
-    #endif
 }
 
 @objc protocol FanControlXPCProtocol {
