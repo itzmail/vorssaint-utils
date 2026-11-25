@@ -85,7 +85,7 @@ render(to: "AppIcon-Default.png") { c in
 }
 
 // Brand glyph: only the star and its heart, on transparency. The orbit arcs
-// are left out because they vanish at menu bar size.
+// are left out because they vanish at menu bar size (see logo-menubar.png).
 render(to: "logo.png") { c in
     c.setFillColor(color(0x000000))
     fillStar(c, long: 390, short: 62, turned: false)
@@ -96,11 +96,18 @@ render(to: "logo.png") { c in
     c.setFillColor(color(0x000000))
     c.fillEllipse(in: CGRect(x: center.x - 30, y: center.y - 30, width: 60, height: 60))
 }
-// Menu bar glyph: the same star drawn for 15 pt. A wider heart and fatter
-// secondary points keep the ring and the diagonal spikes readable instead of
+// Menu bar glyph: the same star and orbit arcs drawn for 15 pt. A wider heart,
+// fatter secondary points and heavier arcs keep every part readable instead of
 // blurring into grey.
 render(to: "logo-menubar.png") { c in
     c.setFillColor(color(0x000000))
+    c.setStrokeColor(color(0x000000))
+    c.setLineWidth(70)
+    c.setLineCap(.round)
+    for (start, end) in [(16.0, 74.0), (106, 164), (196, 254), (286, 344)] {
+        c.addArc(center: center, radius: 340, startAngle: start * .pi / 180, endAngle: end * .pi / 180, clockwise: false)
+        c.strokePath()
+    }
     fillStar(c, long: 390, short: 96, turned: false)
     fillStar(c, long: 250, short: 70, turned: true)
     c.setBlendMode(.clear)
