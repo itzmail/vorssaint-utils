@@ -5,7 +5,7 @@
 # Releases the Solvane fork: builds and signs the app, packages the DMG,
 # publishes a GitHub release on the fork and bumps the Homebrew tap cask.
 # Run from the release/personal branch, after merging upstream and re-running
-# Tools/rebrand.sh. Tags look like <app version>-fork.<N>, e.g. 3.4.4-fork.2.
+# Tools/rebrand.sh. Tags look like <app version>.<N>, e.g. 3.4.4.1: the first three parts are the upstream version, the last is the fork revision.
 #
 #   Tools/release-fork.sh 2             # build and package only, nothing published
 #   Tools/release-fork.sh 2 --publish   # also create the release and update the tap
@@ -23,7 +23,7 @@ PUBLISH=0
 [[ -z "$(git status --porcelain --untracked-files=no)" ]] || { echo "✗ commit your changes first" >&2; exit 1; }
 
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)"
-TAG="$VERSION-fork.$N"
+TAG="$VERSION.$N"
 DMG="dist/Solvane-$VERSION.dmg"
 
 if gh release view "$TAG" --repo "$FORK_REPO" >/dev/null 2>&1; then
@@ -57,7 +57,7 @@ Install: \`brew tap itzmail/solvane && brew install --cask solvane\`, or \`brew 
 TAP="$(mktemp -d)"
 trap 'rm -rf "$TAP"' EXIT
 gh repo clone "$TAP_REPO" "$TAP" -- -q
-perl -i -pe "s/^  version \".*\"/  version \"$TAG\"/; s/^  sha256 \".*\"/  sha256 \"$SHA\"/" "$TAP/Casks/solvane.rb"
+perl -i -pe "s/^  version \".*\"/  version \"$TAG\"/; s/^  sha256 \".*\"/  sha256 \"$SHA\"/; s|^  url \".*\"|  url \"https://github.com/itzmail/vorssaint-utils/releases/download/#{version}/Solvane-#{version.major_minor_patch}.dmg\"|" "$TAP/Casks/solvane.rb"
 git -C "$TAP" commit -qam "[main] solvane $TAG"
 git -C "$TAP" push -q origin main
 echo "✓ Released $TAG. Friends update with: brew upgrade --cask solvane"
