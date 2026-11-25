@@ -73,14 +73,31 @@ func bitmapCanvas(_ px: Int, _ py: Int) -> NSBitmapImageRep? {
                      bytesPerRow: 0, bitsPerPixel: 0)
 }
 
+// The menu bar draws its own heavier master; the finer logo.png blurs at 15 pt.
+let menuBarLogoPath = projectDir.appendingPathComponent("Resources/Brand/logo-menubar.png").path
+guard let menuBarLogo = NSImage(contentsOfFile: menuBarLogoPath),
+      let menuBarTIFF = menuBarLogo.tiffRepresentation,
+      let menuBarRep = NSBitmapImageRep(data: menuBarTIFF)
+else {
+    print("could not load \(menuBarLogoPath)")
+    exit(1)
+}
+let menuBarBounds = contentBounds(of: menuBarRep)
+let menuBarSourceRect = CGRect(x: menuBarBounds.minX,
+                               y: CGFloat(menuBarRep.pixelsHigh) - menuBarBounds.maxY,
+                               width: menuBarBounds.width,
+                               height: menuBarBounds.height)
+
 /// Draws the trimmed mark fitted into `target`, preserving aspect ratio.
-func drawMark(into target: CGRect) {
-    let scale = min(target.width / sourceRect.width, target.height / sourceRect.height)
-    let size = CGSize(width: sourceRect.width * scale, height: sourceRect.height * scale)
+func drawMark(into target: CGRect, menuBar: Bool = false) {
+    let image = menuBar ? menuBarLogo : logo
+    let source = menuBar ? menuBarSourceRect : sourceRect
+    let scale = min(target.width / source.width, target.height / source.height)
+    let size = CGSize(width: source.width * scale, height: source.height * scale)
     let rect = CGRect(x: target.midX - size.width / 2,
                       y: target.midY - size.height / 2,
                       width: size.width, height: size.height)
-    logo.draw(in: rect, from: sourceRect, operation: .sourceOver, fraction: 1,
+    image.draw(in: rect, from: source, operation: .sourceOver, fraction: 1,
               respectFlipped: false, hints: [.interpolation: NSImageInterpolation.high.rawValue])
 }
 
@@ -117,7 +134,7 @@ func renderAppIcon(px: Int) -> Data? {
 // The mark is ~1.97:1, so fitting it into a fixed box made the width the
 // limiting side and left the height unused, rendering it far shorter than the
 // menu bar icons around it. Size from the height and let the width follow.
-let menuBarGlyphHeight: CGFloat = 12.5
+let menuBarGlyphHeight: CGFloat = 15
 // Centered geometrically the mark reads high, since the thin ring tails carry
 // the bounding box below the planet body. Drop it onto the same visual floor
 // as its neighbours.
@@ -139,7 +156,7 @@ func renderMenuBarIcon(scale: Int) -> Data? {
     // are bottom-up, so dropping it lowers y.
     let ink = menuBarGlyphHeight * CGFloat(scale)
     let y = (CGFloat(height) - ink) / 2 - menuBarGlyphDrop * CGFloat(scale)
-    drawMark(into: CGRect(x: 0, y: y, width: CGFloat(width), height: ink))
+    drawMark(into: CGRect(x: 0, y: y, width: CGFloat(width), height: ink), menuBar: true)
     NSGraphicsContext.restoreGraphicsState()
     return rep.representation(using: .png, properties: [:])
 }

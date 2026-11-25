@@ -6,6 +6,7 @@
 // - Resources/Brand/AppIcon-Default.png: the app icon master (1024 px)
 // - Resources/Brand/logo.png: the bare glyph on a transparent canvas, from
 //   which MakeIcon.swift derives the menu bar template image and the brand mark
+// - Resources/Brand/logo-menubar.png: the same glyph, heavier, for the menu bar
 // Run it from anywhere: swift Tools/MakeSolvaneIcon.swift
 import AppKit
 
@@ -95,4 +96,17 @@ render(to: "logo.png") { c in
     c.setFillColor(color(0x000000))
     c.fillEllipse(in: CGRect(x: center.x - 30, y: center.y - 30, width: 60, height: 60))
 }
-print("wrote Resources/Brand/AppIcon-Default.png and logo.png")
+// Menu bar glyph: the same star drawn for 15 pt. A wider heart and fatter
+// secondary points keep the ring and the diagonal spikes readable instead of
+// blurring into grey.
+render(to: "logo-menubar.png") { c in
+    c.setFillColor(color(0x000000))
+    fillStar(c, long: 390, short: 96, turned: false)
+    fillStar(c, long: 250, short: 70, turned: true)
+    c.setBlendMode(.clear)
+    c.fillEllipse(in: CGRect(x: center.x - 112, y: center.y - 112, width: 224, height: 224))
+    c.setBlendMode(.normal)
+    c.setFillColor(color(0x000000))
+    c.fillEllipse(in: CGRect(x: center.x - 52, y: center.y - 52, width: 104, height: 104))
+}
+print("wrote Resources/Brand/AppIcon-Default.png, logo.png and logo-menubar.png")
