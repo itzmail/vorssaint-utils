@@ -5,7 +5,7 @@
 // TRADEMARKS.md does not license to forks:
 // - Resources/Brand/AppIcon-Default.png: the app icon master (1024 px)
 // - Resources/Brand/logo.png: the bare glyph on a transparent canvas, from
-//   which MakeIcon.swift derives the menu bar template image and the brand mark
+//   which MakeIcon.swift derives the in-app brand mark
 // - Resources/Brand/logo-menubar.png: the same glyph, heavier, for the menu bar
 // Run it from anywhere: swift Tools/MakeSolvaneIcon.swift
 import AppKit
@@ -84,10 +84,18 @@ render(to: "AppIcon-Default.png") { c in
     c.restoreGState()
 }
 
-// Brand glyph: only the star and its heart, on transparency. The orbit arcs
-// are left out because they vanish at menu bar size (see logo-menubar.png).
+// Brand glyph: the star, its heart and the orbit arcs, on transparency. Used
+// for the in-app mark and the DMG background. The arcs are a touch heavier
+// than on the app icon so they hold up at the mark's smallest sizes.
 render(to: "logo.png") { c in
     c.setFillColor(color(0x000000))
+    c.setStrokeColor(color(0x000000))
+    c.setLineWidth(48)
+    c.setLineCap(.round)
+    for (start, end) in [(12.0, 78.0), (102, 168), (192, 258), (282, 348)] {
+        c.addArc(center: center, radius: 330, startAngle: start * .pi / 180, endAngle: end * .pi / 180, clockwise: false)
+        c.strokePath()
+    }
     fillStar(c, long: 390, short: 62, turned: false)
     fillStar(c, long: 235, short: 40, turned: true)
     c.setBlendMode(.clear)
@@ -96,6 +104,7 @@ render(to: "logo.png") { c in
     c.setFillColor(color(0x000000))
     c.fillEllipse(in: CGRect(x: center.x - 30, y: center.y - 30, width: 60, height: 60))
 }
+
 // Menu bar glyph: the same star and orbit arcs drawn for 15 pt. A wider heart,
 // fatter secondary points and heavier arcs keep every part readable instead of
 // blurring into grey.
